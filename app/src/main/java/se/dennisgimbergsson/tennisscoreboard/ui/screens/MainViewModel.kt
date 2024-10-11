@@ -3,25 +3,19 @@ package se.dennisgimbergsson.tennisscoreboard.ui.screens
 import android.content.Context
 import android.view.KeyEvent.KEYCODE_STEM_1
 import android.view.KeyEvent.KEYCODE_STEM_2
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import androidx.wear.input.WearableButtons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.ADVANTAGE
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.FIFTEEN
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.FORTY
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.THIRTY
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.ZERO
-import se.dennisgimbergsson.tennisscoreboard.data.Score
-import se.dennisgimbergsson.tennisscoreboard.data.Scoreboard
-import se.dennisgimbergsson.tennisscoreboard.data.Teams
-import se.dennisgimbergsson.tennisscoreboard.data.Teams.AWAY
-import se.dennisgimbergsson.tennisscoreboard.data.Teams.HOME
+import kotlinx.coroutines.launch
 import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.ADVANTAGE
 import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.FIFTEEN
 import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.FORTY
 import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.THIRTY
 import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.ZERO
+import se.dennisgimbergsson.tennisscoreboard.data.repositories.SharedPreferencesRepository
 import se.dennisgimbergsson.tennisscoreboard.data.models.Score
 import se.dennisgimbergsson.tennisscoreboard.data.models.Scoreboard
 import se.dennisgimbergsson.tennisscoreboard.enums.Teams
@@ -34,7 +28,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @ApplicationContext context: Context,
-) : ReduxViewModel<MainViewState>(MainViewState()) {
+    private val sharedPreferencesRepository: SharedPreferencesRepository
+) : ReduxViewModel<MainViewState>(
+    initialState = MainViewState()
+), DefaultLifecycleObserver {
 
     init {
         val homeButton = WearableButtons.getButtonInfo(context, KEYCODE_STEM_1)
@@ -51,6 +48,29 @@ class MainViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        saveScoreboard()
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        loadScoreboard()
+    }
+
+    private fun loadScoreboard() = viewModelScope.launch {
+        val scoreboard = sharedPreferencesRepository.getScoreboardData()
+        setState {
+            copy(scoreboard = scoreboard)
+        }
+    }
+
+    private fun saveScoreboard() = viewModelScope.launch {
+        sharedPreferencesRepository.putScoreboardData(
+            scoreboard = currentState().scoreboard
+        )
     }
 
     private fun incrementScore(team: Teams) =

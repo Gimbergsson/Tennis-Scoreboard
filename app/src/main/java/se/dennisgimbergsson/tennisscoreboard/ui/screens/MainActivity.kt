@@ -10,11 +10,11 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import se.dennisgimbergsson.tennisscoreboard.ui.views.ScoreboardView
 import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
+import se.dennisgimbergsson.tennisscoreboard.ui.views.ScoreboardView
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,6 +24,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycle.addObserver(viewModel)
+
         setContent {
             TennisScoreboardTheme {
                 Surface(
@@ -31,7 +33,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ScoreboardView(
-                        state = viewModel.stateFlow.collectAsState(MainViewState()).value,
+                        state = viewModel.stateFlow.collectAsStateWithLifecycle(
+                            initialValue = MainViewState()
+                        ).value,
                         incrementHomeScore = viewModel::incrementHome,
                         incrementAwayScore = viewModel::incrementAway,
                         clearAll = viewModel::clear,
