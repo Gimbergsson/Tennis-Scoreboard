@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.data
+package se.dennisgimbergsson.tennisscoreboard.enums
 
 import androidx.annotation.StringRes
 import se.dennisgimbergsson.tennisscoreboard.R

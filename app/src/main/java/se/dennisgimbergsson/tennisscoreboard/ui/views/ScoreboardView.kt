@@ -35,9 +35,9 @@ import androidx.wear.tooling.preview.devices.WearDevices.RECT
 import androidx.wear.tooling.preview.devices.WearDevices.SMALL_ROUND
 import androidx.wear.tooling.preview.devices.WearDevices.SQUARE
 import se.dennisgimbergsson.tennisscoreboard.R
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores
-import se.dennisgimbergsson.tennisscoreboard.data.Score
-import se.dennisgimbergsson.tennisscoreboard.data.Scoreboard
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores
+import se.dennisgimbergsson.tennisscoreboard.data.models.Score
+import se.dennisgimbergsson.tennisscoreboard.data.models.Scoreboard
 import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewState
 import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
 

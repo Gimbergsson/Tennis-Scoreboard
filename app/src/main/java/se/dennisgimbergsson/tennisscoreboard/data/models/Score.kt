@@ -1,6 +1,7 @@
-package se.dennisgimbergsson.tennisscoreboard.data
+package se.dennisgimbergsson.tennisscoreboard.data.models
 
-import se.dennisgimbergsson.tennisscoreboard.data.GameScores.ZERO
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.ZERO
 
 data class Score(
     var gameScore: GameScores = ZERO,

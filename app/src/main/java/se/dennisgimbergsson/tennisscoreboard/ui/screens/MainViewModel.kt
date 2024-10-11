@@ -17,6 +17,16 @@ import se.dennisgimbergsson.tennisscoreboard.data.Scoreboard
 import se.dennisgimbergsson.tennisscoreboard.data.Teams
 import se.dennisgimbergsson.tennisscoreboard.data.Teams.AWAY
 import se.dennisgimbergsson.tennisscoreboard.data.Teams.HOME
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.ADVANTAGE
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.FIFTEEN
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.FORTY
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.THIRTY
+import se.dennisgimbergsson.tennisscoreboard.enums.GameScores.ZERO
+import se.dennisgimbergsson.tennisscoreboard.data.models.Score
+import se.dennisgimbergsson.tennisscoreboard.data.models.Scoreboard
+import se.dennisgimbergsson.tennisscoreboard.enums.Teams
+import se.dennisgimbergsson.tennisscoreboard.enums.Teams.AWAY
+import se.dennisgimbergsson.tennisscoreboard.enums.Teams.HOME
 import se.dennisgimbergsson.tennisscoreboard.utils.ReduxViewModel
 import javax.inject.Inject
 

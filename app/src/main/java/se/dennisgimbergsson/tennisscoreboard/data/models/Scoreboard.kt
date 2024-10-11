@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.data
+package se.dennisgimbergsson.tennisscoreboard.data.models
 
 import android.graphics.drawable.Drawable
 
