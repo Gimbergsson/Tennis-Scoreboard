@@ -13,6 +13,7 @@ import se.dennisgimbergsson.tennisscoreboard.data.GameScores.FORTY
 import se.dennisgimbergsson.tennisscoreboard.data.GameScores.THIRTY
 import se.dennisgimbergsson.tennisscoreboard.data.GameScores.ZERO
 import se.dennisgimbergsson.tennisscoreboard.data.Score
+import se.dennisgimbergsson.tennisscoreboard.data.Scoreboard
 import se.dennisgimbergsson.tennisscoreboard.data.Teams
 import se.dennisgimbergsson.tennisscoreboard.data.Teams.AWAY
 import se.dennisgimbergsson.tennisscoreboard.data.Teams.HOME
@@ -34,7 +35,7 @@ class MainViewModel @Inject constructor(
 
         viewModelScope.launchSetState {
             copy(
-                scoreboardState = ScoreboardState(
+                scoreboard = Scoreboard(
                     homeIcon = homeIcon,
                     awayIcon = awayIcon
                 )
@@ -42,53 +43,175 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun incrementScore(team: Teams) = viewModelScope.launchSetState {
+    private fun incrementScore(team: Teams) =
+        calculateIncrementedScore(team = team) { homeScore, awayScore ->
+            viewModelScope.launchSetState {
+                copy(
+                    scoreboard = scoreboard.copy(
+                        homeScore = homeScore,
+                        awayScore = awayScore,
+                    )
+                )
+            }
+        }
+
+    private fun calculateIncrementedScore(
+        team: Teams,
+        result: (Score, Score) -> Unit
+    ) = with(currentState().scoreboard) {
         // Home
-        val currentHomeWonGames = currentState().homeScore.wonGames
+        val currentHomeWonSets = homeScore.wonSets
+        var homeWonSets = currentHomeWonSets
+
+        val currentHomeWonGames = homeScore.wonGames
         var homeWonGames = currentHomeWonGames
 
-        val currentHomeGameScore = currentState().homeScore.gameScore
+        val currentHomeGameScore = homeScore.gameScore
         var homeGameScore = currentHomeGameScore
 
         // Away
-        val currentAwayWonGames = currentState().awayScore.wonGames
+        val currentAwayWonSets = awayScore.wonSets
+        var awayWonSets = currentAwayWonSets
+
+        val currentAwayWonGames = awayScore.wonGames
         var awayWonGames = currentAwayWonGames
 
-        val currentAwayGameScore = currentState().awayScore.gameScore
+        val currentAwayGameScore = awayScore.gameScore
         var awayGameScore = currentAwayGameScore
 
         when (team) {
             HOME -> {
-                homeGameScore = when (currentState().homeScore.gameScore) {
-                    ZERO -> FIFTEEN
-                    FIFTEEN -> THIRTY
-                    THIRTY -> FORTY
-                    FORTY -> {
-                        when (currentAwayGameScore) {
-                            ADVANTAGE -> {
-                                awayGameScore = FORTY
-                                FORTY
+                homeGameScore = when {
+                    currentHomeWonGames == 2 -> {
+                        when (currentHomeGameScore) {
+                            ZERO -> FIFTEEN
+                            FIFTEEN -> THIRTY
+                            THIRTY -> FORTY
+                            FORTY -> {
+                                when (currentAwayGameScore) {
+                                    ADVANTAGE -> {
+                                        awayGameScore = FORTY
+                                        FORTY
+                                    }
+
+                                    FORTY -> ADVANTAGE
+                                    else -> {
+                                        homeWonSets++
+                                        homeWonGames = 0
+                                        awayWonGames = 0
+                                        awayGameScore = ZERO
+                                        ZERO
+                                    }
+                                }
                             }
 
-                            FORTY -> ADVANTAGE
-                            else -> {
-                                homeWonGames++
+                            ADVANTAGE -> {
+                                homeWonSets++
+                                homeWonGames = 0
+                                awayWonGames = 0
                                 awayGameScore = ZERO
                                 ZERO
                             }
                         }
                     }
 
-                    ADVANTAGE -> {
-                        homeWonGames++
-                        awayGameScore = ZERO
-                        ZERO
+                    else -> {
+                        when (currentHomeGameScore) {
+                            ZERO -> FIFTEEN
+                            FIFTEEN -> THIRTY
+                            THIRTY -> FORTY
+                            FORTY -> {
+                                when (currentAwayGameScore) {
+                                    ADVANTAGE -> {
+                                        awayGameScore = FORTY
+                                        FORTY
+                                    }
+
+                                    FORTY -> ADVANTAGE
+                                    else -> {
+                                        homeWonGames++
+                                        awayGameScore = ZERO
+                                        ZERO
+                                    }
+                                }
+                            }
+
+                            ADVANTAGE -> {
+                                homeWonGames++
+                                awayGameScore = ZERO
+                                ZERO
+                            }
+                        }
                     }
                 }
             }
 
             AWAY -> {
-                awayGameScore = when (currentAwayGameScore) {
+                awayGameScore = when {
+                    currentAwayWonGames == 2 -> {
+                        when (currentAwayGameScore) {
+                            ZERO -> FIFTEEN
+                            FIFTEEN -> THIRTY
+                            THIRTY -> FORTY
+                            FORTY -> {
+                                when (currentHomeGameScore) {
+                                    ADVANTAGE -> {
+                                        homeGameScore = FORTY
+                                        FORTY
+                                    }
+
+                                    FORTY -> ADVANTAGE
+                                    else -> {
+                                        awayWonSets++
+                                        awayWonGames = 0
+                                        homeWonGames = 0
+                                        homeGameScore = ZERO
+                                        ZERO
+                                    }
+                                }
+                            }
+
+                            ADVANTAGE -> {
+                                awayWonSets++
+                                awayWonGames = 0
+                                homeWonGames = 0
+                                homeGameScore = ZERO
+                                ZERO
+                            }
+                        }
+                    }
+
+                    else -> {
+                        when (currentAwayGameScore) {
+                            ZERO -> FIFTEEN
+                            FIFTEEN -> THIRTY
+                            THIRTY -> FORTY
+                            FORTY -> {
+                                when (currentHomeGameScore) {
+                                    ADVANTAGE -> {
+                                        homeGameScore = FORTY
+                                        FORTY
+                                    }
+
+                                    FORTY -> ADVANTAGE
+                                    else -> {
+                                        awayWonGames++
+                                        homeGameScore = ZERO
+                                        ZERO
+                                    }
+                                }
+                            }
+
+                            ADVANTAGE -> {
+                                awayWonGames++
+                                homeGameScore = ZERO
+                                ZERO
+                            }
+                        }
+                    }
+                }
+
+                /*awayGameScore = when (currentAwayGameScore) {
                     ZERO -> FIFTEEN
                     FIFTEEN -> THIRTY
                     THIRTY -> FORTY
@@ -113,34 +236,48 @@ class MainViewModel @Inject constructor(
                         homeGameScore = ZERO
                         ZERO
                     }
-                }
+                }*/
             }
         }
-        val homeScore = Score(gameScore = homeGameScore, wonGames = homeWonGames)
-        val awayScore = Score(gameScore = awayGameScore, awayWonGames)
-        val scoreboardState = ScoreboardState(
-            homeScore = homeScore,
-            awayScore = awayScore,
-            homeIcon = currentState().scoreboardState.homeIcon,
-            awayIcon = currentState().scoreboardState.awayIcon,
-        )
-        copy(
-            homeScore = homeScore,
-            awayScore = awayScore,
-            scoreboardState = scoreboardState
+
+        result(
+            Score(
+                gameScore = homeGameScore,
+                wonGames = homeWonGames,
+                wonSets = homeWonSets,
+            ),
+            Score(
+                gameScore = awayGameScore,
+                wonGames = awayWonGames,
+                wonSets = awayWonSets,
+            )
         )
     }
 
-    private fun decrementScore(team: Teams) = viewModelScope.launchSetState {
+    private fun decrementScore(team: Teams) =
+        calculateDecrementedScore(team = team) { homeScore, awayScore ->
+            viewModelScope.launchSetState {
+                copy(
+                    scoreboard = scoreboard.copy(
+                        homeScore = homeScore,
+                        awayScore = awayScore,
+                    )
+                )
+            }
+        }
 
+    private fun calculateDecrementedScore(
+        team: Teams,
+        result: (Score, Score) -> Unit
+    ) = with(currentState().scoreboard) {
         // Home
-        var currentHomeWonGames = currentState().homeScore.wonGames
-        val currentHomeGameScore = currentState().homeScore.gameScore
+        var currentHomeWonGames = homeScore.wonGames
+        val currentHomeGameScore = homeScore.gameScore
         var homeGameScore = currentHomeGameScore
 
         // Away
-        var currentAwayWonGames = currentState().awayScore.wonGames
-        val currentAwayGameScore = currentState().awayScore.gameScore
+        var currentAwayWonGames = awayScore.wonGames
+        val currentAwayGameScore = awayScore.gameScore
         var awayGameScore = currentAwayGameScore
 
         when (team) {
@@ -152,6 +289,7 @@ class MainViewModel @Inject constructor(
                         }
                         ZERO
                     }
+
                     FIFTEEN -> ZERO
                     THIRTY -> FIFTEEN
                     FORTY -> THIRTY
@@ -167,6 +305,7 @@ class MainViewModel @Inject constructor(
                         }
                         ZERO
                     }
+
                     FIFTEEN -> ZERO
                     THIRTY -> FIFTEEN
                     FORTY -> THIRTY
@@ -174,20 +313,16 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
-        val homeScore = Score(gameScore = homeGameScore, currentHomeWonGames)
-        val awayScore = Score(gameScore = awayGameScore, currentAwayWonGames)
 
-        val scoreboardState = ScoreboardState(
-            homeScore = homeScore,
-            awayScore = awayScore,
-            homeIcon = currentState().scoreboardState.homeIcon,
-            awayIcon = currentState().scoreboardState.awayIcon,
-        )
-
-        copy(
-            homeScore = homeScore,
-            awayScore = awayScore,
-            scoreboardState = scoreboardState
+        result(
+            Score(
+                gameScore = homeGameScore,
+                wonGames = currentHomeWonGames
+            ),
+            Score(
+                gameScore = awayGameScore,
+                wonGames = currentAwayWonGames
+            )
         )
     }
 
@@ -197,13 +332,9 @@ class MainViewModel @Inject constructor(
 
     fun clear() = viewModelScope.launchSetState {
         copy(
-            homeScore = Score(),
-            awayScore = Score(),
-            scoreboardState = ScoreboardState(
+            scoreboard = scoreboard.copy(
                 homeScore = Score(),
                 awayScore = Score(),
-                homeIcon = currentState().scoreboardState.homeIcon,
-                awayIcon = currentState().scoreboardState.awayIcon,
             )
         )
     }
