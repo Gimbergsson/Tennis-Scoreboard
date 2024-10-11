@@ -1,0 +1,4 @@
+<resources>
+    <string name="icon_increment_away_score">Increment away score icon</string>
+    <string name="icon_increment_home_score">Increment home score icon</string>
+</resources>
