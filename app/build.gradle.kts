@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.livedata)
     implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.preference)
 
     // Enable for navigation between compose views/screens.
     //implementation "androidx.wear.compose:compose-navigation:1.1.2"
@@ -75,4 +76,6 @@ dependencies {
 
     implementation(libs.jetbrain.corutines.android)
     implementation(libs.jetbrain.corutines.guava)
+
+    implementation(libs.gson)
 }
