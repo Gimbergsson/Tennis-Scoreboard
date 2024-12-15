@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Tennis Scoreboard</string>
+    <string name="home_score_label">Home</string>
+    <string name="away_score_label">Away</string>
+    <string name="score_0">0</string>
+    <string name="score_40">40</string>
+    <string name="score_30">30</string>
+    <string name="score_15">15</string>
+    <string name="score_advantage">Adv.</string>
+
+    <string name="decrement_home_score">Decrement home</string>
+    <string name="decrement_away_score">Decrement away</string>
+    <string name="clear_all_score">Clear all</string>
+</resources>

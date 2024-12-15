@@ -45,4 +45,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Tennis Scoreboard"
-include ("app")
+include (":wearos")
+include(":androidos")
+include(":shared")
