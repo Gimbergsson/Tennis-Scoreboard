@@ -32,6 +32,8 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    id("org.jetbrains.kotlin.jvm") version "2.1.0"
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
 }
 
 allprojects {
@@ -41,11 +43,5 @@ allprojects {
                 jvmTarget = JvmTarget.JVM_17
             }
         }
-    }
-}
-
-tasks {
-    register("clean", Delete::class) {
-        delete(rootProject.layout.buildDirectory)
     }
 }

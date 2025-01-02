@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -30,16 +30,16 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "APPWRITE_PROJECT_ID", "\"${apikeyProperties["APPWRITE_PROJECT_ID"]}\"")
-        buildConfigField("String", "APPWRITE_API_KEY", "\"${apikeyProperties["APPWRITE_API_KEY"]}\"")
+        buildConfigField("String", "APPWRITE_PROJECT_ID", "${apikeyProperties["APPWRITE_PROJECT_ID"]}")
+        buildConfigField("String", "APPWRITE_API_KEY", "${apikeyProperties["APPWRITE_API_KEY"]}")
     }
 
     signingConfigs {
-        create("config") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
+        create("releaseConfig") {
+            keyAlias = keystoreProperties["KEYSTORE_KEY_ALIAS"] as String?
+            keyPassword = keystoreProperties["KEYSTORE_KEY_PASSWORD"] as String?
+            storeFile = file(keystoreProperties["KEYSTORE_FILE_PATH"] as String)
+            storePassword = keystoreProperties["KEYSTORE_PASSWORD"] as String
         }
     }
 
@@ -50,6 +50,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("releaseConfig")
         }
     }
 
@@ -70,6 +71,7 @@ android {
     }
 
     kotlinOptions {
+        languageVersion = "2.0"
         jvmTarget = "17"
     }
 }
@@ -78,7 +80,7 @@ dependencies {
     implementation(project(":shared"))
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.compiler)
