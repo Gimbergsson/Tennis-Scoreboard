@@ -17,3 +17,5 @@
 local.properties
 apikey.properties
 keystore.properties
+keystore.jks
+android.keystore
