@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.appwrite.Client
 import se.dennisgimbergsson.shared.utils.Constants
 import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
 import se.dennisgimbergsson.shared.utils.DispatcherProvider
@@ -26,6 +27,9 @@ object AppModule {
 
     @Provides
     fun gson(): Gson = GsonBuilder().create()
+
+    @Provides
+    fun appwriteClient(): Client = Client()
 
     @Provides
     fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()

@@ -25,6 +25,17 @@
 
         </activity>
 
+        <service android:name=".services.DataLayerListenerService" />
+
+        <activity android:name="io.appwrite.views.CallbackActivity" android:exported="true">
+            <intent-filter android:label="android_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appwrite-callback-6716c8cf001419f170c3" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

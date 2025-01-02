@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,14 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties()
+apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
@@ -18,6 +29,18 @@ android {
         versionName = "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "APPWRITE_PROJECT_ID", "\"${apikeyProperties["APPWRITE_PROJECT_ID"]}\"")
+        buildConfigField("String", "APPWRITE_API_KEY", "\"${apikeyProperties["APPWRITE_API_KEY"]}\"")
+    }
+
+    signingConfigs {
+        create("config") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
     }
 
     buildTypes {
@@ -79,4 +102,12 @@ dependencies {
     androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+tasks.register("printVersionName") {
+    val versionName = android.defaultConfig.versionName?.replace(".", "_")
+    val versionCode = android.defaultConfig.versionCode
+    doLast {
+        println("$versionName-$versionCode")
+    }
 }
