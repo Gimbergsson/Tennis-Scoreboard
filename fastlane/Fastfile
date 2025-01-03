@@ -10,7 +10,7 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
     )
-    =begin
+=begin
     supply(
       track: 'wear:internal',
       aab: 'wearos/build/outputs/bundle/release/wearos-release.aab',
@@ -18,6 +18,6 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
     )
-    =end
+=end
   end
 end
