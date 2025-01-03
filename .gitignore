@@ -19,3 +19,7 @@ apikey.properties
 keystore.properties
 keystore.jks
 android.keystore
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots
+/fastlane/test_output
