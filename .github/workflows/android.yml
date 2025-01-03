@@ -57,7 +57,7 @@ jobs:
       run: |
           VERSION_NAME=$(${{github.workspace}}/gradlew -q printVersionName)
           MESSAGE=$(cat << EOF
-          tennis-scoreboard_${VERSION_NAME}
+          tennis-scoreboard-${VERSION_NAME}
           EOF)
           echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
 
@@ -92,3 +92,11 @@ jobs:
       with:
         name: ${{ env.OUTPUT_NAME }}
         path: androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
+
+    - name: Publish to Play Store
+      uses: r0adkll/upload-google-play@v1
+      with:
+         serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+         packageName: se.dennisgimbergsson.tennisscoreboard
+         releaseFiles: androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
+         track: qa
