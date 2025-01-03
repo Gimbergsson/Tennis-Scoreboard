@@ -76,14 +76,17 @@ jobs:
           EOF)
           echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
 
+    - name: Build Android OS release AAB
+      run: bash ./gradlew androidos:bundleRelease --stacktrace
+    
+    - name: Publish AAB artifact to Google Play Store internal track
+      run: bundle exec fastlane deploy_internal
+
     - name: Build Android OS release APK
       run: bash ./gradlew androidos:assembleRelease --stacktrace
 
     - name: Rename APK 
       run: mv "./androidos/build/outputs/apk/release/androidos-release.apk" "./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk"
-    
-    - name: Build Android OS release AAB
-      run: bash ./gradlew androidos:bundleRelease --stacktrace
 
     - name: Rename AAB 
       run:
@@ -96,8 +99,3 @@ jobs:
         path: |
           ./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
           ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
-          
-    - name: Deploy to Playstore Internal
-      env: 
-        OUTPUT_NAME: ${{ env.OUTPUT_NAME }}
-      run: bundle exec fastlane deploy_internal
