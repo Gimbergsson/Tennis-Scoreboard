@@ -3,9 +3,15 @@ default_platform(:android)
 platform :android do
   desc "Deploy internal tracks to Google Play"
   lane :deploy_internal do
+    versionName = ENV['OUTPUT_NAME']
+
+    def get_aab_path(version_name)
+      "androidos/build/outputs/bundle/release/#{version_name}.aab"
+    end
+
     supply(
       track: 'internal',
-      aab: 'androidos/build/outputs/bundle/fullRelease/androidos-release.aab',
+      aab: get_aab_path(version_name),
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
