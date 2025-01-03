@@ -91,3 +91,6 @@ jobs:
         path: |
           ./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
           ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
+          
+    - name: Deploy to Playstore Internal
+      run: bundle exec fastlane deploy_internal
