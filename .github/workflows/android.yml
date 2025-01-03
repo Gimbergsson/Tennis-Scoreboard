@@ -9,7 +9,7 @@ on:
 jobs:
   apk:
     name: Generate release builds
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
 
@@ -29,7 +29,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.2.1'
-        bundler-cache: true
+        bundler-cache: false
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
