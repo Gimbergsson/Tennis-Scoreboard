@@ -30,6 +30,9 @@ jobs:
       with:
         ruby-version: '3.2.1'
         bundler-cache: false
+
+    - name: Install fastlane
+      run: gem install fastlane
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
