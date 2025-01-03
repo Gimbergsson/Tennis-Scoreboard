@@ -9,7 +9,7 @@ on:
 jobs:
   apk:
     name: Generate release builds
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
 
@@ -28,8 +28,13 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.4.1'
-        bundler-cache: true
+        ruby-version: '3.2.1'
+        bundler-cache: false
+
+    - name: Install fastlane
+      run: |
+        gem install bundler
+        bundle install
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -93,4 +98,6 @@ jobs:
           ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
           
     - name: Deploy to Playstore Internal
+      env: 
+        OUTPUT_NAME: ${{ env.OUTPUT_NAME }}
       run: bundle exec fastlane deploy_internal
