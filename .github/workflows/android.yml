@@ -51,6 +51,7 @@ jobs:
       run: |
         echo "The path of keystore.jks is:"
         pwd
+        echo "Keystore Path: ${{ vars.KEYSTORE_STORE_FILE_PATH }}"
         ls -la
     
     - name: Generate file name env var
