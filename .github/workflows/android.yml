@@ -25,6 +25,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4.1'
+        bundler-cache: true
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
         
@@ -47,6 +53,9 @@ jobs:
     - name: Decode keystore and create jks
       run: echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > androidos/keystore.jks
 
+    - name: Decode and create service account json
+      run: echo "${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > service-account-fehu-351916-1b4950fa3fb0.json
+
     - name: Print file path
       run: |
         echo "The path of keystore.jks is:"
@@ -66,20 +75,7 @@ jobs:
       run: bash ./gradlew androidos:assembleRelease --stacktrace
 
     - name: Rename APK 
-      run: |
-        pwd
-        ls -la
-        ls -la ./androidos/build
-        ls -la ./androidos/build/outputs
-        ls -la ./androidos/build/outputs/apk
-        ls -la ./androidos/build/outputs/apk/release
-        mv "./androidos/build/outputs/apk/release/androidos-release.apk" "./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk"
-
-    - name: Upload release APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.OUTPUT_NAME }}
-        path: app/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
+      run: mv "./androidos/build/outputs/apk/release/androidos-release.apk" "./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk"
     
     - name: Build Android OS release AAB
       run: bash ./gradlew androidos:bundleRelease --stacktrace
@@ -87,3 +83,11 @@ jobs:
     - name: Rename AAB 
       run:
         mv "./androidos/build/outputs/bundle/release/androidos-release.aab" "./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab"
+        
+    - name: Upload release APK and ABB
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.OUTPUT_NAME }}
+        path: |
+          ./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
+          ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
