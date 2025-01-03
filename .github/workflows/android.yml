@@ -98,4 +98,6 @@ jobs:
           ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
           
     - name: Deploy to Playstore Internal
+      env: 
+        OUTPUT_NAME: ${{ env.OUTPUT_NAME }}
       run: bundle exec fastlane deploy_internal
