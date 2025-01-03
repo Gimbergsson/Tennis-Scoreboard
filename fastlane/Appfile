@@ -1,0 +1,2 @@
+json_key_file("./service-account-fehu-351916-1b4950fa3fb0.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("se.dennisgimbergsson.tennisscoreboard")
