@@ -10,14 +10,5 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
     )
-=begin
-    supply(
-      track: 'wear:internal',
-      aab: 'wearos/build/outputs/bundle/release/wearos-release.aab',
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-    )
-=end
   end
 end
