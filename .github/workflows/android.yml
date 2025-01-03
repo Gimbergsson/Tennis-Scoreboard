@@ -53,6 +53,9 @@ jobs:
     - name: Decode keystore and create jks
       run: echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > androidos/keystore.jks
 
+    - name: Decode and create service account json
+      run: echo "${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > service-account-fehu-351916-1b4950fa3fb0.json
+
     - name: Print file path
       run: |
         echo "The path of keystore.jks is:"
