@@ -87,9 +87,3 @@ jobs:
     - name: Rename AAB 
       run:
         mv "./androidos/build/outputs/bundle/release/androidos-release.aab" "./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab"
-      
-    - name: Upload debug AAB
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.OUTPUT_NAME }}
-        path: androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
