@@ -38,10 +38,10 @@ jobs:
     - name: Generate keystore.properties
       run: |
           cat <<EOF > keystore.properties
-          KEYSTORE_PASSWORD:${{ secrets.KEYSTORE_STORE_PASSWORD }}
+          KEYSTORE_PASSWORD:${{ secrets.KEYSTORE_PASSWORD }}
           KEYSTORE_KEY_PASSWORD:${{ secrets.KEYSTORE_KEY_PASSWORD }}
           KEYSTORE_KEY_ALIAS:${{ secrets.KEYSTORE_KEY_ALIAS }}
-          KEYSTORE_FILE_PATH:${{ vars.KEYSTORE_STORE_FILE_PATH }}
+          KEYSTORE_FILE_PATH:${{ vars.KEYSTORE_FILE_PATH }}
           EOF
     
     - name: Decode keystore and create jks
@@ -51,7 +51,7 @@ jobs:
       run: |
         echo "The path of keystore.jks is:"
         pwd
-        echo "Keystore Path: ${{ vars.KEYSTORE_STORE_FILE_PATH }}"
+        echo "Keystore Path: ${{ vars.KEYSTORE_FILE_PATH }}"
         ls -la
     
     - name: Generate file name env var
