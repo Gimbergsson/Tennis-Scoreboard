@@ -67,20 +67,20 @@ jobs:
         pwd
         echo "Keystore Path: ${{ vars.KEYSTORE_FILE_PATH }}"
         ls -la
-    
-    - name: Generate file name env var
-      run: |
-          VERSION_NAME=$(${{github.workspace}}/gradlew -q printBuildName)
-          MESSAGE=$(cat << EOF
-          tennis-scoreboard-${VERSION_NAME}
-          EOF)
-          echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
 
     - name: Bump Version Code
       uses: chkfung/android-version-actions@v1.2.2
       with:
-         gradlePath: androidos/build.gradle.kts
-         versionCode: ${{ github.run_number }}
+        gradlePath: androidos/build.gradle.kts
+        versionCode: ${{ github.run_number }}
+    
+    - name: Generate file name env var
+      run: |
+          VERSION_NAME=$(${{ github.workspace }}/gradlew -q printBuildName)
+          MESSAGE=$(cat << EOF
+          tennis-scoreboard-${VERSION_NAME}
+          EOF)
+          echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
 
     - name: Build Android OS release AAB
       run: bash ./gradlew androidos:bundleRelease --stacktrace
