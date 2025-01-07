@@ -17,6 +17,11 @@ val apikeyPropertiesFile = rootProject.file("apikey.properties")
 val apikeyProperties = Properties()
 apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
+@Suppress("UnstableApiUsage")
+val gitBranchName = providers.exec {
+    commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
+}.standardOutput.asText.get()
+
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
     compileSdk = 35
@@ -25,8 +30,8 @@ android {
         applicationId = "se.dennisgimbergsson.tennisscoreboard"
         minSdk = 28
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 1
+        versionName = "${buildVersionName()} ($versionCode)"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -108,10 +113,34 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-tasks.register("printVersionName") {
+tasks.register("printBuildName") {
     val versionName = android.defaultConfig.versionName?.replace(".", "_")
     val versionCode = android.defaultConfig.versionCode
     doLast {
-        println("$versionName#$versionCode")
+        println("$versionName-#$versionCode")
     }
+}
+
+private fun buildVersionName(): String {
+    var versionName = "undefined-version-name"
+    try {
+        // Gets the full branch name from Git.
+        val branchName = gitBranchName.trim()
+
+        // Only take the identifier part from the full branch name
+        // example from "release/1-0-0" to "1-0-0".
+        val branchIdentifierName = gitBranchName.trim()
+            .split("/")
+            .last()
+
+        // If it's a release build then replace the strokes with dots.
+        versionName = if (branchName.startsWith("release")) {
+            branchIdentifierName.replace("-", ".")
+        } else {
+            branchIdentifierName
+        }
+    } catch (ignored: Exception) {
+        println("Failed to get git branch")
+    }
+    return versionName
 }
