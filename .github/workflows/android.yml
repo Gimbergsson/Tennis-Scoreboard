@@ -76,9 +76,15 @@ jobs:
           EOF)
           echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
 
+    - name: Bump Version Code
+      uses: chkfung/android-version-actions@v1.2.2
+      with:
+         gradlePath: androidos/build.gradle.kts
+         versionCode: ${{ github.run_number }}
+
     - name: Build Android OS release AAB
       run: bash ./gradlew androidos:bundleRelease --stacktrace
-    
+
     - name: Publish AAB artifact to Google Play Store internal track
       run: bundle exec fastlane deploy_internal
 
