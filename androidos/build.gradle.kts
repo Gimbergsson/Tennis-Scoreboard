@@ -115,9 +115,11 @@ dependencies {
 
 tasks.register("printBuildName") {
     val versionName = android.defaultConfig.versionName?.replace(".", "_")
-    val versionCode = android.defaultConfig.versionCode
+        ?.replace(" ", "-#")
+        ?.replace("(", "")
+        ?.replace(")", "")
     doLast {
-        println("$versionName-#$versionCode")
+        println("$versionName")
     }
 }
 
