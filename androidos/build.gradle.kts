@@ -35,8 +35,8 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "APPWRITE_PROJECT_ID", "${apikeyProperties["APPWRITE_PROJECT_ID"]}")
-        buildConfigField("String", "APPWRITE_API_KEY", "${apikeyProperties["APPWRITE_API_KEY"]}")
+        buildConfigField("String", "APPWRITE_PROJECT_ID", apikeyProperties["APPWRITE_PROJECT_ID"] as String)
+        buildConfigField("String", "APPWRITE_API_KEY", apikeyProperties["APPWRITE_API_KEY"] as String)
     }
 
     signingConfigs {
