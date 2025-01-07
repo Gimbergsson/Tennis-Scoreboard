@@ -70,7 +70,7 @@ jobs:
     
     - name: Generate file name env var
       run: |
-          VERSION_NAME=$(${{github.workspace}}/gradlew -q printVersionName)
+          VERSION_NAME=$(${{github.workspace}}/gradlew -q printBuildName)
           MESSAGE=$(cat << EOF
           tennis-scoreboard-${VERSION_NAME}
           EOF)
