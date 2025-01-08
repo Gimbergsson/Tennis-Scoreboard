@@ -4,11 +4,19 @@ platform :android do
   desc "Deploy internal tracks to Google Play"
   lane :deploy_internal do
     supply(
-      track: 'internal',
-      aab: 'androidos/build/outputs/bundle/release/androidos-release.aab',
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
+        track: 'internal',
+        aab: 'androidos/build/outputs/bundle/release/androidos-release.aab',
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+    )
+
+    supply(
+        track: 'wear:internal',
+        aab: 'wearos/build/outputs/bundle/release/wearos-release.aab',
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
     )
   end
 end

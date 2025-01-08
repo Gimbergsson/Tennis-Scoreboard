@@ -5,7 +5,7 @@ on:
     branches:
       - release/*
   workflow_dispatch:
-  
+
 jobs:
   apk:
     name: Generate release builds
@@ -18,7 +18,7 @@ jobs:
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-
-    
+
     - name: set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -35,17 +35,17 @@ jobs:
       run: |
         gem install bundler
         bundle install
-        
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-        
+
     - name: Generate apikey.properties
       run: |
           cat <<EOF > apikey.properties
           APPWRITE_PROJECT_ID:"${{ vars.APPWRITE_PROJECT_ID }}"
           APPWRITE_API_KEY:"${{ secrets.APPWRITE_API_KEY }}"
           EOF
-    
+
     - name: Generate keystore.properties
       run: |
           cat <<EOF > keystore.properties
@@ -54,54 +54,68 @@ jobs:
           KEYSTORE_KEY_ALIAS:${{ secrets.KEYSTORE_KEY_ALIAS }}
           KEYSTORE_FILE_PATH:${{ vars.KEYSTORE_FILE_PATH }}
           EOF
-    
+
     - name: Decode keystore and create jks
-      run: echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > androidos/keystore.jks
+      run: |
+        echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > androidos/keystore.jks
+        echo "${{ secrets.KEYSTORE_JKS_BASE64 }}" | base64 --decode > wearos/keystore.jks
 
     - name: Decode and create service account json
       run: echo "${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > service-account-fehu-351916-1b4950fa3fb0.json
 
-    - name: Print file path
+    - name: Create version codes from runner number
       run: |
-        echo "The path of keystore.jks is:"
-        pwd
-        echo "Keystore Path: ${{ vars.KEYSTORE_FILE_PATH }}"
-        ls -la
+        #!/bin/bash
+  
+        github_run_number=${{ github.run_number }}
+        next_number=$((github_run_number + 1))
+        doubled_number=$((next_number * 2))
+        
+        echo ANDROID_OS_VERSION_CODE=$doubled_number >> $GITHUB_ENV
+        echo "The version code for Android OS app is ${{ env.ANDROID_OS_VERSION_CODE }}"
+        
+        echo WEAR_OS_VERSION_CODE=$((doubled_number + 1)) >> $GITHUB_ENV
+        echo "The version code for Wear OS app is ${{ env.WEAR_OS_VERSION_CODE }}"
 
-    - name: Bump Version Code
+    - name: Bump Android OS Version Code
       uses: chkfung/android-version-actions@v1.2.2
       with:
         gradlePath: androidos/build.gradle.kts
-        versionCode: ${{ github.run_number }}
-    
+        versionCode: ${{ env.ANDROID_OS_VERSION_CODE }}
+
+    - name: Bump Wear OS Version Code
+      uses: chkfung/android-version-actions@v1.2.2
+      with:
+        gradlePath: wearos/build.gradle.kts
+        versionCode: ${{ env.WEAR_OS_VERSION_CODE }}
+
     - name: Generate file name env var
       run: |
-          VERSION_NAME=$(${{ github.workspace }}/gradlew -q printBuildName)
-          MESSAGE=$(cat << EOF
-          tennis-scoreboard-${VERSION_NAME}
-          EOF)
-          echo OUTPUT_NAME=$MESSAGE >> $GITHUB_ENV
+        ANDROID_OS_VERSION_NAME=$(${{ github.workspace }}/gradlew -q androidos:printBuildName)
+        ANDROID_OS_NAME="tennis-scoreboard-androidos-${ANDROID_OS_VERSION_NAME}"
+        echo ANDROID_OS_FILE_NAME=$ANDROID_OS_NAME >> $GITHUB_ENV
+        WEAR_OS_VERSION_NAME=$(${{ github.workspace }}/gradlew -q wearos:printBuildName)
+        WEAR_OS_NAME="tennis-scoreboard-wearos-${WEAR_OS_VERSION_NAME}"
+        echo WEAR_OS_FILE_NAME=$WEAR_OS_NAME >> $GITHUB_ENV
 
-    - name: Build Android OS release AAB
-      run: bash ./gradlew androidos:bundleRelease --stacktrace
+    - name: Build release AAB artifacts
+      run: bash ./gradlew bundleRelease --stacktrace
 
-    - name: Publish AAB artifact to Google Play Store internal track
+    - name: Publish AAB artifacts to Google Play Store internal tracks
       run: bundle exec fastlane deploy_internal
 
-    - name: Build Android OS release APK
-      run: bash ./gradlew androidos:assembleRelease --stacktrace
+    - name: Build release APK artifacts
+      run: bash ./gradlew assembleRelease --stacktrace
 
-    - name: Rename APK 
-      run: mv "./androidos/build/outputs/apk/release/androidos-release.apk" "./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk"
+    - name: Rename APK artifacts
+      run: |
+        mv "./androidos/build/outputs/apk/release/androidos-release.apk" "./androidos/build/outputs/apk/release/${{ env.ANDROID_OS_FILE_NAME }}.apk"
+        mv "./wearos/build/outputs/apk/release/wearos-release.apk" "./wearos/build/outputs/apk/release/${{ env.WEAR_OS_FILE_NAME }}.apk"
 
-    - name: Rename AAB 
-      run:
-        mv "./androidos/build/outputs/bundle/release/androidos-release.aab" "./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab"
-        
-    - name: Upload release APK and ABB
+    - name: Upload release APK and ABB artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.OUTPUT_NAME }}
+        name: tennis-scoreboard-artifacts
         path: |
-          ./androidos/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
-          ./androidos/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
+          ./androidos/build/outputs/apk/release/${{ env.ANDROID_OS_FILE_NAME }}.apk
+          ./wearos/build/outputs/apk/release/${{ env.WEAR_OS_FILE_NAME }}.apk
