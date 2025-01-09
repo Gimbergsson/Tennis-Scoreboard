@@ -53,7 +53,8 @@ fun ScoreboardView(
     decrementHome: () -> Unit = {},
     decrementAway: () -> Unit = {},
 ) = LazyColumn(
-    modifier = modifier, verticalArrangement = Arrangement.SpaceBetween
+    modifier = modifier,
+    verticalArrangement = Arrangement.SpaceBetween
 ) {
     item {
         val context = LocalContext.current
@@ -77,7 +78,8 @@ fun ScoreboardView(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         val homeButton = WearableButtons.getButtonInfo(context, KEYCODE_STEM_1)
-                        val homeIcon = WearableButtons.getButtonIcon(context, homeButton?.keycode ?: -1)
+                        val homeIcon =
+                            WearableButtons.getButtonIcon(context, homeButton?.keycode ?: -1)
                         homeIcon?.let {
                             Image(
                                 modifier = Modifier.size(14.dp),
@@ -167,7 +169,8 @@ fun ScoreboardView(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         val awayButton = WearableButtons.getButtonInfo(context, KEYCODE_STEM_2)
-                        val awayIcon = WearableButtons.getButtonIcon(context, awayButton?.keycode ?: -1)
+                        val awayIcon =
+                            WearableButtons.getButtonIcon(context, awayButton?.keycode ?: -1)
                         awayIcon?.let {
                             Image(
                                 modifier = Modifier.size(14.dp),
@@ -209,30 +212,48 @@ fun ScoreboardView(
         }
     }
     item {
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { decrementHome() }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = stringResource(id = R.string.decrement_home_score))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { decrementHome() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.decrement_home_score),
+                    textAlign = TextAlign.Center,
+                )
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { decrementAway() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.decrement_away_score),
+                    textAlign = TextAlign.Center,
+                )
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { clearAll() }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.clear_all_score),
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { decrementAway() }
-        ) {
-            Text(text = stringResource(id = R.string.decrement_away_score))
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { clearAll() }
-        ) {
-            Text(text = stringResource(id = R.string.clear_all_score))
-        }
+    }
+    item {
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }
 
 
 @Preview(
-    apiLevel = 33,
+    apiLevel = 34,
     device = LARGE_ROUND,
     group = "round",
     showSystemUi = true,
@@ -240,7 +261,7 @@ fun ScoreboardView(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Preview(
-    apiLevel = 33,
+    apiLevel = 34,
     device = SMALL_ROUND,
     group = "round",
     showSystemUi = true,
@@ -248,7 +269,7 @@ fun ScoreboardView(
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    apiLevel = 33,
+    apiLevel = 34,
     device = RECT,
     group = "rect",
     showSystemUi = true,
@@ -256,7 +277,7 @@ fun ScoreboardView(
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    apiLevel = 33,
+    apiLevel = 34,
     device = SQUARE,
     group = "square",
     showSystemUi = true,
