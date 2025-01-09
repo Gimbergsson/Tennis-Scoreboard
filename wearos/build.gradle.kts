@@ -101,6 +101,7 @@ dependencies {
     implementation(libs.play.services.tasks)
 
     implementation(libs.androidx.ktx)
+    implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.lifecycle.runtime)
