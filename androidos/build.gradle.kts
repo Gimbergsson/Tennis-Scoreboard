@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.androidx.compose.compiler)
 
     implementation(libs.androidx.ktx)
+    implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
