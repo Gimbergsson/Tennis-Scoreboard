@@ -40,6 +40,9 @@ material = "1.12.0"
 playServicesWearable = "19.0.0"
 playServicesTasks = "18.2.0"
 splashscreen = "1.2.0-alpha02"
+wear-compose-foundation = "1.4.0"
+wear-compose-material = "1.4.0"
+wear-compose-material-core = "1.4.0"
 
 # KotlinX
 corutines = "1.9.0"
@@ -67,6 +70,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunner" }
 
 androidx-wear = { group = "androidx.wear", name = "wear", version.ref = "wear" }
+androidx-wear-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wear-compose-material" }
+androidx-wear-compose-material-core = { group = "androidx.wear.compose", name = "compose-material-core", version.ref = "wear-compose-material-core" }
+androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wear-compose-foundation" }
 androidx-wear-input = { group = "androidx.wear", name = "wear-input", version.ref = "wearInput" }
 androidx-wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
 
