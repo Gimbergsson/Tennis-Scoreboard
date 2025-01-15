@@ -110,6 +110,9 @@ dependencies {
     implementation(libs.androidx.preference)
 
     implementation(libs.androidx.wear)
+    implementation(libs.androidx.wear.compose.material)
+    implementation(libs.androidx.wear.compose.material.core)
+    implementation(libs.androidx.wear.compose.foundation)
     implementation(libs.androidx.wear.input)
     implementation(libs.androidx.wear.tooling.preview)
 
