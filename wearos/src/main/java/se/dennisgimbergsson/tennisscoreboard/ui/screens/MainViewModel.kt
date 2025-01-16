@@ -112,6 +112,7 @@ class MainViewModel @Inject constructor(
                                 currentAwayGameScore = ZERO
                                 ZERO
                             }
+                            else -> ZERO
                         }
                     }
 
@@ -141,6 +142,7 @@ class MainViewModel @Inject constructor(
                                 currentAwayGameScore = ZERO
                                 ZERO
                             }
+                            else -> ZERO
                         }
                     }
                 }
@@ -178,6 +180,7 @@ class MainViewModel @Inject constructor(
                                 homeGameScore = ZERO
                                 ZERO
                             }
+                            else -> ZERO
                         }
                     }
 
@@ -269,6 +272,7 @@ class MainViewModel @Inject constructor(
                     THIRTY -> FIFTEEN
                     FORTY -> THIRTY
                     ADVANTAGE -> FORTY
+                    else -> ZERO
                 }
             }
 
@@ -285,6 +289,7 @@ class MainViewModel @Inject constructor(
                     THIRTY -> FIFTEEN
                     FORTY -> THIRTY
                     ADVANTAGE -> FORTY
+                    else -> ZERO
                 }
             }
         }
