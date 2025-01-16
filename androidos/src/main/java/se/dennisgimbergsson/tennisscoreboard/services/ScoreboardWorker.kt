@@ -12,6 +12,7 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.GsonBuilder
 import se.dennisgimbergsson.shared.data.models.Scoreboard
+import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.shared.utils.Constants
 
@@ -43,10 +44,15 @@ class ScoreboardWorker(
             if (event.type == TYPE_CHANGED) {
                 event.dataItem.also { item ->
                     if (item.uri.path?.compareTo(Constants.Paths.SCOREBOARD_UPDATE) == 0) {
-                        val scoreboard = getScoreboardUpdate(DataMapItem.fromDataItem(item).dataMap)
+                        val scoreboard =
+                            getScoreboardUpdate(DataMapItem.fromDataItem(item).dataMap)
+                        val homeGameScore =
+                            scoreboard.homeScore.gameScore?.score ?: GameScores.ZERO.score
+                        val awayGameScore =
+                            scoreboard.awayScore.gameScore?.score ?: GameScores.ZERO.score
                         Toast.makeText(
                             applicationContext,
-                            "Score: ${scoreboard.homeScore.gameScore.score} - ${scoreboard.awayScore.gameScore.score}",
+                            "Score: $homeGameScore - $awayGameScore",
                             Toast.LENGTH_SHORT
                         ).show()
                         logAndroidMessage("Score: ${scoreboard.homeScore} - ${scoreboard.awayScore}")

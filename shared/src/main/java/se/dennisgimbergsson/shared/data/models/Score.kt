@@ -4,7 +4,7 @@ import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.enums.GameScores.ZERO
 
 data class Score(
-    var gameScore: GameScores = ZERO,
+    var gameScore: GameScores? = ZERO,
     var wonGames: Int = 0,
     var wonSets: Int = 0
 ) {
