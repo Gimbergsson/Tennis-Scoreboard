@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.wear.input.WearableButtons
-import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.utils.WearPreview
 import se.dennisgimbergsson.tennisscoreboard.R
 import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewState
@@ -103,7 +102,7 @@ fun ScoreboardView(
             Text(
                 modifier = Modifier
                     .padding(end = 8.dp),
-                text = stringResource(id = state.scoreboard.homeScore.gameScore?.stringResource ?: GameScores.ZERO.stringResource),
+                text = stringResource(id = state.scoreboard.homeScore.gameScore.stringResource),
                 color = Color.White,
                 textAlign = TextAlign.End,
                 fontSize = 32.sp,
@@ -191,7 +190,7 @@ fun ScoreboardView(
             Text(
                 modifier = Modifier
                     .padding(start = 8.dp),
-                text = stringResource(id = state.scoreboard.awayScore.gameScore?.stringResource ?: GameScores.ZERO.stringResource),
+                text = stringResource(id = state.scoreboard.awayScore.gameScore.stringResource),
                 color = Color.White,
                 textAlign = TextAlign.Start,
                 fontSize = 32.sp,

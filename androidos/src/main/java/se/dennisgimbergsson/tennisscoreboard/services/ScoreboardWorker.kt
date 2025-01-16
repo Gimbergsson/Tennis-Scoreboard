@@ -12,7 +12,6 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.GsonBuilder
 import se.dennisgimbergsson.shared.data.models.Scoreboard
-import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.shared.utils.Constants
 
@@ -47,9 +46,9 @@ class ScoreboardWorker(
                         val scoreboard =
                             getScoreboardUpdate(DataMapItem.fromDataItem(item).dataMap)
                         val homeGameScore =
-                            scoreboard.homeScore.gameScore?.score ?: GameScores.ZERO.score
+                            scoreboard.homeScore.gameScore.score
                         val awayGameScore =
-                            scoreboard.awayScore.gameScore?.score ?: GameScores.ZERO.score
+                            scoreboard.awayScore.gameScore.score
                         Toast.makeText(
                             applicationContext,
                             "Score: $homeGameScore - $awayGameScore",
