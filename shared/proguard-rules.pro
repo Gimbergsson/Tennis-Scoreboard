@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#-keep class se.dennisgimbergsson.shared.data.models.** { *; }
+#-keep @se.dennisgimbergsson.shared.utils.ThemedPreview class *
+#-keep @se.dennisgimbergsson.shared.utils.LocalePreview class *
+#-keep @se.dennisgimbergsson.shared.utils.WearPreview class *
