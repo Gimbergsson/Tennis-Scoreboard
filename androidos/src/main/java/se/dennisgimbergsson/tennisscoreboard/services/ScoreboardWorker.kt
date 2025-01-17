@@ -11,7 +11,9 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.GsonBuilder
+import se.dennisgimbergsson.shared.GameScoresDeserializer
 import se.dennisgimbergsson.shared.data.models.Scoreboard
+import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.shared.utils.Constants
 
@@ -63,6 +65,10 @@ class ScoreboardWorker(
 
     private fun getScoreboardUpdate(dataMap: DataMap): Scoreboard {
         val json = dataMap.getString(Constants.Keys.SCOREBOARD_UPDATE)
-        return GsonBuilder().create().fromJson(json, Scoreboard::class.java) ?: Scoreboard()
+        logAndroidMessage(message = "json: $json")
+        return GsonBuilder()
+            .registerTypeAdapter(GameScores::class.java, GameScoresDeserializer())
+            .create()
+            .fromJson(json, Scoreboard::class.java) ?: Scoreboard()
     }
 }
