@@ -53,6 +53,9 @@ dependencies {
 
     implementation(libs.material)
 
+    // 3rd-party libraries
+    implementation(libs.gson)
+
     testImplementation(libs.androidx.arch.core)
     testImplementation(libs.kotlinx.corutines.test)
 

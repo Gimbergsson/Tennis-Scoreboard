@@ -11,6 +11,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.appwrite.Client
+import se.dennisgimbergsson.shared.GameScoresDeserializer
+import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.utils.Constants
 import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
 import se.dennisgimbergsson.shared.utils.DispatcherProvider
@@ -26,7 +28,9 @@ annotation class DeveloperPreferences
 object AppModule {
 
     @Provides
-    fun gson(): Gson = GsonBuilder().create()
+    fun gson(): Gson = GsonBuilder()
+        .registerTypeAdapter(GameScores::class.java, GameScoresDeserializer())
+        .create()
 
     @Provides
     fun appwriteClient(): Client = Client()
