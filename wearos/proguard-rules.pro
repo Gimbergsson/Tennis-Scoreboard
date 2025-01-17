@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#-keep class com.google.android.gms.wearable.PutDataRequest { *; }
+-keep class * extends android.os.Parcelable { *; }
+
 # Classes from :wearos module
 -keep class se.dennisgimbergsson.tennisscoreboard.ui.screens.MainActivity { *; }
 

@@ -20,6 +20,11 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class com.google.android.gms.common.data.EntityBuffer { *; }
+-keep class com.google.android.gms.common.data.AbstractDataBuffer { *; }
+-keep class com.google.android.gms.wearable.DataEventBuffer { *; }
+-keep class com.google.android.gms.wearable.DataEvent { *; }
+
 # Classes from :androidos module
 -keep class se.dennisgimbergsson.tennisscoreboard.MainActivity { *; }
 
