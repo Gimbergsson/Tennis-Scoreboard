@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.0"
-androidGradlePlugin = "8.7.3"
+androidGradlePlugin = "8.8.1"
 kotlinGradlePlugin = "2.0.20"
 hiltGradlePlugin = "2.51.1"
 maven-publish="0.28.0"
