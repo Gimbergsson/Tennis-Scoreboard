@@ -3,8 +3,6 @@ package se.dennisgimbergsson.tennisscoreboard.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,9 +21,6 @@ annotation class DeveloperPreferences
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    fun gson(): Gson = GsonBuilder().create()
 
     @Provides
     fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
