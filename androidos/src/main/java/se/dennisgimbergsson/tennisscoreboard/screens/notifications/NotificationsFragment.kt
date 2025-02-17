@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.ui.notifications
+package se.dennisgimbergsson.tennisscoreboard.screens.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater

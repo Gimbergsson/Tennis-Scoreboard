@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.ui.home
+package se.dennisgimbergsson.tennisscoreboard.screens.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,16 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import dagger.hilt.android.AndroidEntryPoint
-import se.dennisgimbergsson.tennisscoreboard.databinding.FragmentHomeBinding
+import androidx.lifecycle.ViewModelProvider
+import se.dennisgimbergsson.tennisscoreboard.databinding.FragmentDashboardBinding
 
-@AndroidEntryPoint
-class HomeFragment : Fragment() {
+class DashboardFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
-
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentDashboardBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,11 +22,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val dashboardViewModel =
+            ViewModelProvider(this).get(DashboardViewModel::class.java)
+
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        viewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textDashboard
+        dashboardViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

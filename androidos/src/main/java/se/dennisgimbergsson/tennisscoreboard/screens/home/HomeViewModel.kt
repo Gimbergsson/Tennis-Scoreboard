@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.ui.home
+package se.dennisgimbergsson.tennisscoreboard.screens.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
