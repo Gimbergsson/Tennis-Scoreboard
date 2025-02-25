@@ -48,6 +48,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
 
+    implementation(libs.androidx.wear)
     implementation(libs.androidx.wear.tooling.preview)
 
     implementation(libs.androidx.ktx)
@@ -55,6 +56,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.livedata)
     implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.work)
+
+    implementation(libs.play.services.wearable)
+    implementation(libs.play.services.tasks)
 
     implementation(libs.material)
 

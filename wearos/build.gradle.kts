@@ -97,8 +97,6 @@ dependencies {
 
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.play.services.wearable)
-    implementation(libs.play.services.tasks)
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.splashscreen)
@@ -116,8 +114,12 @@ dependencies {
     implementation(libs.androidx.wear.input)
     implementation(libs.androidx.wear.tooling.preview)
 
+    implementation(libs.play.services.wearable)
+    implementation(libs.play.services.tasks)
+
     implementation(libs.kotlinx.corutines.core)
     implementation(libs.kotlinx.corutines.play.services)
+
     implementation(libs.jetbrain.corutines.android)
     implementation(libs.jetbrain.corutines.guava)
 
