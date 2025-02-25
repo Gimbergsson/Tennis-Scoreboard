@@ -6,4 +6,5 @@ import se.dennisgimbergsson.shared.data.models.Scoreboard
 @Immutable
 data class MainViewState(
     val scoreboard: Scoreboard = Scoreboard(),
+    val scoreboardHistory: List<Scoreboard> = listOf(Scoreboard()),
 )

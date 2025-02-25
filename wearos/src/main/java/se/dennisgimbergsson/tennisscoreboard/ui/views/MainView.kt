@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,11 +42,12 @@ import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewState
 import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
 
 @Composable
-fun ScoreboardView(
+fun MainView(
     modifier: Modifier = Modifier,
     state: MainViewState,
     incrementHomeScore: () -> Unit = {},
     incrementAwayScore: () -> Unit = {},
+    revertLastScore: () -> Unit = {},
     clearAll: () -> Unit = {},
     decrementHome: () -> Unit = {},
     decrementAway: () -> Unit = {},
@@ -91,45 +91,57 @@ fun ScoreboardView(
                 )
             }
             item {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.SpaceBetween
+                Button(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { revertLastScore() }
                 ) {
-                    Button(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(5.dp),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { decrementHome() }
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(0.dp),
-                            text = stringResource(id = R.string.decrement_home_score),
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                    Button(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(5.dp),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { decrementAway() }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.decrement_away_score),
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                    Button(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(5.dp),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = { clearAll() }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.clear_all_score),
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+                    Text(
+                        modifier = Modifier.padding(0.dp),
+                        text = stringResource(id = R.string.revert_last_score),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+            item {
+                Button(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { decrementHome() }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(0.dp),
+                        text = stringResource(id = R.string.decrement_home_score),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+            item {
+                Button(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { decrementAway() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.decrement_away_score),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+            item {
+                Button(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(5.dp),
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = { clearAll() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.clear_all_score),
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
             item {

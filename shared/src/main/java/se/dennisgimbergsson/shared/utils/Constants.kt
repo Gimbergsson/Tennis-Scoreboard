@@ -9,6 +9,7 @@ object Constants {
 
     object Keys{
         const val SCOREBOARD = "scoreboard"
+        const val SCOREBOARD_HISTORY = "scoreboard_history"
         const val SCOREBOARD_UPDATE = "scoreboard_update"
     }
 

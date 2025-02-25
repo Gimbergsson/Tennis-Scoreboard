@@ -22,8 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import se.dennisgimbergsson.shared.extensions.logWearMessage
 import se.dennisgimbergsson.shared.utils.Constants
 import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
-import se.dennisgimbergsson.tennisscoreboard.ui.views.ScoreboardView
 import javax.inject.Inject
+import se.dennisgimbergsson.tennisscoreboard.ui.views.MainView
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ScoreboardView(
+                    MainView(
                         state = viewModel.stateFlow.collectAsStateWithLifecycle(
                             initialValue = MainViewState()
                         ).value,
@@ -63,7 +63,8 @@ class MainActivity : ComponentActivity() {
                             viewModel.incrementAway()
                             increaseCounter()
                         },
-                        clearAll = viewModel::clear,
+                        revertLastScore = viewModel::popScoreboardHistory,
+                        clearAll = viewModel::clearScoreboard,
                         decrementHome = viewModel::decrementHome,
                         decrementAway = viewModel::decrementAway,
                     )

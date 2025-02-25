@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import se.dennisgimbergsson.shared.data.models.Score
+import se.dennisgimbergsson.shared.data.models.Scoreboard
 import se.dennisgimbergsson.shared.enums.GameScores.ADVANTAGE
 import se.dennisgimbergsson.shared.enums.GameScores.FIFTEEN
 import se.dennisgimbergsson.shared.enums.GameScores.FORTY
@@ -28,11 +29,19 @@ class MainViewModel @Inject constructor(
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         saveScoreboard()
+        saveScoreboardHistory()
     }
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         loadScoreboard()
+        loadScoreboardHistory()
+    }
+
+    private fun saveScoreboard() = viewModelScope.launch {
+        sharedPreferencesRepository.putScoreboardData(
+            scoreboard = currentState().scoreboard
+        )
     }
 
     private fun loadScoreboard() = viewModelScope.launch {
@@ -42,15 +51,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun saveScoreboard() = viewModelScope.launch {
-        sharedPreferencesRepository.putScoreboardData(
-            scoreboard = currentState().scoreboard
-        )
-    }
-
-                )
-            }
+    private fun saveScoreboardHistory() =
+        viewModelScope.launch {
+            sharedPreferencesRepository.putScoreboardHistoryData(
+                scoreboardHistory = currentState().scoreboardHistory
+            )
         }
+
+    private fun loadScoreboardHistory() = viewModelScope.launch {
+        val scoreboardHistory = sharedPreferencesRepository.getScoreboardHistoryData()
+        setState {
+            copy(scoreboardHistory = scoreboardHistory)
+        }
+    }
 
     private fun calculateIncrementedScore(
         team: Teams,
@@ -234,11 +247,15 @@ class MainViewModel @Inject constructor(
     private fun incrementScore(team: Teams) =
         calculateIncrementedScore(team = team) { homeScore, awayScore ->
             viewModelScope.launchSetState {
+                val scoreboard = scoreboard.copy(
+                    homeScore = homeScore,
+                    awayScore = awayScore,
+                )
+                val scoreboardHistory = scoreboardHistory.toMutableList()
+                scoreboardHistory.add(scoreboard)
                 copy(
-                    scoreboard = scoreboard.copy(
-                        homeScore = homeScore,
-                        awayScore = awayScore,
-                    )
+                    scoreboard = scoreboard,
+                    scoreboardHistory = scoreboardHistory,
                 )
             }
         }
@@ -250,11 +267,15 @@ class MainViewModel @Inject constructor(
     private fun decrementScore(team: Teams) =
         calculateDecrementedScore(team = team) { homeScore, awayScore ->
             viewModelScope.launchSetState {
+                val scoreboard = scoreboard.copy(
+                    homeScore = homeScore,
+                    awayScore = awayScore,
+                )
+                val scoreboardHistory = scoreboardHistory.toMutableList()
+                scoreboardHistory.add(scoreboard)
                 copy(
-                    scoreboard = scoreboard.copy(
-                        homeScore = homeScore,
-                        awayScore = awayScore,
-                    )
+                    scoreboard = scoreboard,
+                    scoreboardHistory = scoreboardHistory,
                 )
             }
         }
@@ -332,8 +353,23 @@ class MainViewModel @Inject constructor(
             scoreboard = scoreboard.copy(
                 homeScore = Score(),
                 awayScore = Score(),
-            )
+            ),
+            scoreboardHistory = listOf(Scoreboard()),
         )
+    }
+
+    fun popScoreboardHistory() = viewModelScope.launch {
+        val scoreboardHistory = currentState().scoreboardHistory
+        if (scoreboardHistory.isEmpty() || scoreboardHistory.size == 1) return@launch
+
+        val newScoreboardHistory = scoreboardHistory.dropLast(1)
+
+        setState {
+            copy(
+                scoreboard = newScoreboardHistory.last(),
+                scoreboardHistory = newScoreboardHistory,
+            )
+        }
     }
 
     companion object {
