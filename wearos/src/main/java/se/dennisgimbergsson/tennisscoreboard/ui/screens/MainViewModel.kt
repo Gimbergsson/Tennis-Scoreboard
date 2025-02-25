@@ -48,14 +48,6 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun incrementScore(team: Teams) =
-        calculateIncrementedScore(team = team) { homeScore, awayScore ->
-            viewModelScope.launchSetState {
-                copy(
-                    scoreboard = scoreboard.copy(
-                        homeScore = homeScore,
-                        awayScore = awayScore,
-                    )
                 )
             }
         }
@@ -112,6 +104,7 @@ class MainViewModel @Inject constructor(
                                 currentAwayGameScore = ZERO
                                 ZERO
                             }
+
                             else -> ZERO
                         }
                     }
@@ -142,6 +135,7 @@ class MainViewModel @Inject constructor(
                                 currentAwayGameScore = ZERO
                                 ZERO
                             }
+
                             else -> ZERO
                         }
                     }
@@ -180,6 +174,7 @@ class MainViewModel @Inject constructor(
                                 homeGameScore = ZERO
                                 ZERO
                             }
+
                             else -> ZERO
                         }
                     }
@@ -232,6 +227,26 @@ class MainViewModel @Inject constructor(
         )
     }
 
+    fun incrementHome() = incrementScore(HOME)
+
+    fun incrementAway() = incrementScore(AWAY)
+
+    private fun incrementScore(team: Teams) =
+        calculateIncrementedScore(team = team) { homeScore, awayScore ->
+            viewModelScope.launchSetState {
+                copy(
+                    scoreboard = scoreboard.copy(
+                        homeScore = homeScore,
+                        awayScore = awayScore,
+                    )
+                )
+            }
+        }
+
+    fun decrementHome() = decrementScore(team = HOME)
+
+    fun decrementAway() = decrementScore(team = AWAY)
+
     private fun decrementScore(team: Teams) =
         calculateDecrementedScore(team = team) { homeScore, awayScore ->
             viewModelScope.launchSetState {
@@ -249,11 +264,13 @@ class MainViewModel @Inject constructor(
         result: (Score, Score) -> Unit
     ): Unit = with(currentState().scoreboard) {
         // Home
+        var currentHomeWonSets = homeScore.wonSets
         var currentHomeWonGames = homeScore.wonGames
         val currentHomeGameScore = homeScore.gameScore
         var homeGameScore = currentHomeGameScore
 
         // Away
+        var currentAwayWonSets = awayScore.wonSets
         var currentAwayWonGames = awayScore.wonGames
         val currentAwayGameScore = awayScore.gameScore
         var awayGameScore = currentAwayGameScore
@@ -262,8 +279,9 @@ class MainViewModel @Inject constructor(
             HOME -> {
                 homeGameScore = when (currentHomeGameScore) {
                     ZERO -> {
-                        if (currentHomeWonGames > 0) {
-                            currentHomeWonGames--
+                        when {
+                            currentHomeWonGames > 0 -> currentHomeWonGames--
+                            currentHomeWonSets > 0 -> currentHomeWonSets--
                         }
                         ZERO
                     }
@@ -279,8 +297,9 @@ class MainViewModel @Inject constructor(
             AWAY -> {
                 awayGameScore = when (currentAwayGameScore) {
                     ZERO -> {
-                        if (currentAwayWonGames > 0) {
-                            currentAwayWonGames--
+                        when {
+                            currentAwayWonGames > 0 -> currentAwayWonGames--
+                            currentAwayWonSets > 0 -> currentAwayWonSets--
                         }
                         ZERO
                     }
@@ -297,20 +316,18 @@ class MainViewModel @Inject constructor(
         result(
             Score(
                 gameScore = homeGameScore,
-                wonGames = currentHomeWonGames
+                wonGames = currentHomeWonGames,
+                wonSets = currentHomeWonSets,
             ),
             Score(
                 gameScore = awayGameScore,
-                wonGames = currentAwayWonGames
+                wonGames = currentAwayWonGames,
+                wonSets = currentAwayWonSets,
             )
         )
     }
 
-    fun incrementHome() = incrementScore(HOME)
-
-    fun incrementAway() = incrementScore(AWAY)
-
-    fun clear() = viewModelScope.launchSetState {
+    fun clearScoreboard() = viewModelScope.launchSetState {
         copy(
             scoreboard = scoreboard.copy(
                 homeScore = Score(),
@@ -318,10 +335,6 @@ class MainViewModel @Inject constructor(
             )
         )
     }
-
-    fun decrementHome() = decrementScore(team = HOME)
-
-    fun decrementAway() = decrementScore(team = AWAY)
 
     companion object {
         private const val TAG = "MainViewModel"

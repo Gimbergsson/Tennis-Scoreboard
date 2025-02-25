@@ -34,5 +34,8 @@ object AppModule {
     @Provides
     @DeveloperPreferences
     fun developerPreferences(@ApplicationContext context: Context): SharedPreferences =
-        context.getSharedPreferences(Constants.Suffixes.DEVELOPER_SETTINGS_SUFFIX, Context.MODE_PRIVATE)
+        context.getSharedPreferences(
+            Constants.Suffixes.DEVELOPER_SETTINGS_SUFFIX,
+            Context.MODE_PRIVATE
+        )
 }
