@@ -79,6 +79,13 @@ android {
         languageVersion = "2.0"
         jvmTarget = "17"
     }
+
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -157,6 +164,17 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.unit)
     // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "skipped", "failed", "standardOut", "standardError")
+        showExceptions = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showCauses = true
+        showStackTraces = true
+        showStandardStreams = true
+    }
 }
 
 tasks.register("printBuildName") {
