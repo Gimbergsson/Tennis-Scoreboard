@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.tennisscoreboard.databinding.ActivityMainBinding
-import se.dennisgimbergsson.tennisscoreboard.services.ScoreboardWorker
+import se.dennisgimbergsson.tennisscoreboard.workers.ScoreboardWorker
 import javax.inject.Inject
 
 @AndroidEntryPoint

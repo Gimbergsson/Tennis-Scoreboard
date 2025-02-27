@@ -25,8 +25,6 @@
 
         </activity>
 
-        <service android:name=".services.DataLayerListenerService" />
-
         <activity android:name="io.appwrite.views.CallbackActivity" android:exported="true">
             <intent-filter android:label="android_web_auth">
                 <action android:name="android.intent.action.VIEW" />

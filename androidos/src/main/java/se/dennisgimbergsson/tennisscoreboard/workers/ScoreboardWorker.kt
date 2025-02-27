@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.services
+package se.dennisgimbergsson.tennisscoreboard.workers
 
 import android.content.Context
 import android.content.SharedPreferences
