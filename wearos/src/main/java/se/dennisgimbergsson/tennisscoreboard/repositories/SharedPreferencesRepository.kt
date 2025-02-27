@@ -50,6 +50,6 @@ class SharedPreferencesRepository @Inject constructor(
 
     companion object {
         private const val DEFAULT_SCOREBOARD_HISTORY =
-            "[{\"awayScore\":{\"gameScore\":\"ZERO\",\"wonGames\":0,\"wonSets\":0},\"homeScore\":{\"gameScore\":\"ZERO\",\"wonGames\":0,\"wonSets\":0},\"peekDrawer\":false}]"
+            "[{\"awayScore\":{\"gameScore\":\"ZERO\",\"wonGames\":0,\"wonSets\":0},\"homeScore\":{\"gameScore\":\"ZERO\",\"wonGames\":0,\"wonSets\":0}]"
     }
 }
