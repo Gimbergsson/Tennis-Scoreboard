@@ -1,7 +1,9 @@
 package se.dennisgimbergsson.tennisscoreboard.services
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.wearable.DataClient
@@ -11,15 +13,23 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.GsonBuilder
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import se.dennisgimbergsson.shared.GameScoresDeserializer
 import se.dennisgimbergsson.shared.data.models.Scoreboard
 import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.shared.utils.Constants
+import se.dennisgimbergsson.shared.utils.Constants.Keys
 
-class ScoreboardWorker(
-    context: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class ScoreboardWorker @AssistedInject constructor(
+    @Assisted val context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val sharedPreferences: SharedPreferences,
 ) : Worker(context, workerParams), DataClient.OnDataChangedListener {
 
     private val dataClient = Wearable.getDataClient(applicationContext)
@@ -29,6 +39,11 @@ class ScoreboardWorker(
         // Process data changes and return Result.success() or Result.failure()
 
         dataClient.addListener(this)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val json = sharedPreferences.getString(Keys.SCOREBOARD, "") ?: ""
+            logAndroidMessage("json: $json")
+        }
 
         return Result.success()
     }

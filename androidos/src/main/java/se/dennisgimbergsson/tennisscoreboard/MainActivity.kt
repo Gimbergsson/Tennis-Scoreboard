@@ -14,9 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
 import se.dennisgimbergsson.tennisscoreboard.databinding.ActivityMainBinding
 import se.dennisgimbergsson.tennisscoreboard.services.ScoreboardWorker
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     private lateinit var binding: ActivityMainBinding
 
@@ -48,9 +52,12 @@ class MainActivity : AppCompatActivity() {
         startWearWorkListener()
     }
 
-    private fun startWearWorkListener() {
-        val workManager = WorkManager.getInstance(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        workManager.cancelUniqueWork(WORK_NAME)
+    }
 
+    private fun startWearWorkListener() {
         workManager.enqueue(wearScoreboardWorker)
 
         workManager.getWorkInfosForUniqueWorkLiveData(WORK_NAME)

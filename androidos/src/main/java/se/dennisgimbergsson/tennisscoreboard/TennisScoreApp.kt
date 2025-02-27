@@ -1,15 +1,26 @@
 package se.dennisgimbergsson.tennisscoreboard
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import io.appwrite.Client
 import javax.inject.Inject
 
 @HiltAndroidApp
-class TennisScoreApp : Application() {
+class TennisScoreApp : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var hiltWorkerFactory: HiltWorkerFactory
 
     @Inject
     lateinit var appwriteClient: Client
+
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(hiltWorkerFactory)
+            .build()
 
     override fun onCreate() {
         super.onCreate()
