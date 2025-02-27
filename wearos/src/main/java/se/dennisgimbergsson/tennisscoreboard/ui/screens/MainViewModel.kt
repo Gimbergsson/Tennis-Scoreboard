@@ -3,6 +3,10 @@ package se.dennisgimbergsson.tennisscoreboard.ui.screens
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.PutDataMapRequest.create
+import com.google.android.gms.wearable.PutDataRequest
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import se.dennisgimbergsson.shared.data.models.Score
@@ -15,12 +19,16 @@ import se.dennisgimbergsson.shared.enums.GameScores.ZERO
 import se.dennisgimbergsson.shared.enums.Teams
 import se.dennisgimbergsson.shared.enums.Teams.AWAY
 import se.dennisgimbergsson.shared.enums.Teams.HOME
+import se.dennisgimbergsson.shared.extensions.logWearMessage
+import se.dennisgimbergsson.shared.utils.Constants
 import se.dennisgimbergsson.shared.utils.ReduxViewModel
 import se.dennisgimbergsson.tennisscoreboard.repositories.SharedPreferencesDataSource
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val wearableDataClient: DataClient,
+    private val gson: Gson,
     private val sharedPreferencesRepository: SharedPreferencesDataSource
 ) : ReduxViewModel<MainViewState>(
     initialState = MainViewState()
@@ -62,6 +70,27 @@ class MainViewModel @Inject constructor(
         val scoreboardHistory = sharedPreferencesRepository.getScoreboardHistoryData()
         setState {
             copy(scoreboardHistory = scoreboardHistory)
+        }
+    }
+
+    fun updateScoreboard() = viewModelScope.launch {
+        val json = gson.toJson(currentState().scoreboard)
+        val putDataReq: PutDataRequest = create(Constants.Paths.SCOREBOARD_UPDATE).run {
+            dataMap.putString(Constants.Keys.SCOREBOARD_UPDATE, json)
+            asPutDataRequest()
+        }.setUrgent()
+        val putDataTask = wearableDataClient.putDataItem(putDataReq)
+        putDataTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Task completed successfully
+                logWearMessage(message = "Updating scoreboard: ${task.result.uri}")
+            } else {
+                // Task failed, handle the exception
+                logWearMessage(
+                    message = "Error updating scoreboard: ${task.exception?.message}",
+                    exception = task.exception,
+                )
+            }
         }
     }
 
