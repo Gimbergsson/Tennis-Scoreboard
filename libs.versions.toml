@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.0"
-androidGradlePlugin = "8.8.1"
+androidGradlePlugin = "8.8.2"
 kotlinGradlePlugin = "2.0.20"
 hiltGradlePlugin = "2.51.1"
 compose-plugin = "1.6.11"
