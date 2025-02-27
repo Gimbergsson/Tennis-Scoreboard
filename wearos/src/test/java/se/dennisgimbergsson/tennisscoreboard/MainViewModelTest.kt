@@ -1,15 +1,21 @@
 package se.dennisgimbergsson.tennisscoreboard
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.SavedStateHandle
+import com.google.android.gms.wearable.DataClient
+import com.google.gson.Gson
+import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
+import se.dennisgimbergsson.shared.data.models.Scoreboard
 import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.tennisscoreboard.repositories.SharedPreferencesDataSource
 import se.dennisgimbergsson.tennisscoreboard.testutils.MainDispatcherRule
 import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewModel
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewModel.Companion.SCOREBOARD_HISTORY_MOCK
 
 class MainViewModelTest {
 
@@ -19,6 +25,9 @@ class MainViewModelTest {
     @get:Rule(order = 1)
     val instantExecutorRule = InstantTaskExecutorRule()
 
+    private val savedStateHandle: SavedStateHandle = mock()
+    private val wearableDataClient: DataClient = mock()
+    private val gson: Gson = mock()
     private val sharedPreferencesRepository: SharedPreferencesDataSource = mock()
 
     /**
@@ -95,9 +104,75 @@ class MainViewModelTest {
         }
     }
 
-    private fun createViewModel() = MainViewModel(
-        sharedPreferencesRepository = sharedPreferencesRepository,
-    )
+    /**
+     * Test reverting the state of the scoreboard back to the previous state.
+     */
+    @Test
+    fun `check that state is reverted`() = runTest {
+        createViewModel().apply {
+            incrementHome()
+            incrementHome()
+            incrementHome()
+            incrementHome()
+
+            incrementAway()
+            incrementAway()
+            incrementAway()
+
+            // Check if the history size is correct
+            assertEquals(8, currentState().scoreboardHistory.size)
+
+            // Pop the last state
+            revertLastScore()
+
+            // Check if the history size is correct
+            assertEquals(7, currentState().scoreboardHistory.size)
+
+            // Check if the last game score is removed
+            assertEquals(GameScores.THIRTY, currentState().scoreboard.awayScore.gameScore)
+        }
+    }
+
+
+    @Test
+    fun `check that state is not reverted if there is no history`() = runTest {
+        createViewModel(
+            mockEmptyHistory = true
+        ).apply {
+            assertEquals(0, currentState().scoreboardHistory.size)
+
+            revertLastScore()
+
+            assertEquals(0, currentState().scoreboardHistory.size)
+        }
+    }
+
+    private suspend fun createViewModel(
+        mockEmptyHistory: Boolean = false,
+    ): MainViewModel {
+        given(savedStateHandle.get<List<Scoreboard>>(SCOREBOARD_HISTORY_MOCK) ?: listOf(Scoreboard()))
+            .willReturn(
+                when {
+                    mockEmptyHistory -> listOf()
+                    else -> listOf(Scoreboard())
+                }
+            )
+
+        given(sharedPreferencesRepository.getScoreboardHistoryData())
+            .willReturn(
+                when {
+                    mockEmptyHistory -> listOf()
+                    else -> listOf(Scoreboard())
+                }
+            )
+
+        return MainViewModel(
+            savedStateHandle = savedStateHandle,
+            wearableDataClient = wearableDataClient,
+            gson = gson,
+            sharedPreferencesRepository = sharedPreferencesRepository,
+        )
+    }
 
     companion object {
         private const val ZERO_WON_GAME = 0

@@ -2,6 +2,7 @@ package se.dennisgimbergsson.tennisscoreboard.ui.screens
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.PutDataMapRequest.create
@@ -27,11 +28,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val wearableDataClient: DataClient,
     private val gson: Gson,
     private val sharedPreferencesRepository: SharedPreferencesDataSource
 ) : ReduxViewModel<MainViewState>(
-    initialState = MainViewState()
+    initialState = MainViewState(
+        scoreboardHistory = savedStateHandle.get<List<Scoreboard>>(SCOREBOARD_HISTORY_MOCK) ?: listOf(Scoreboard())
+    )
 ), DefaultLifecycleObserver {
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -387,22 +391,24 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun popScoreboardHistory() = viewModelScope.launch {
-        val scoreboardHistory = currentState().scoreboardHistory
-        if (scoreboardHistory.isEmpty() || scoreboardHistory.size == 1) return@launch
+    fun revertLastScore() = viewModelScope.launchSetState {
+        val currentHistory = currentState().scoreboardHistory
+        when {
+            currentHistory.isNotEmpty() -> {
+                val updatedHistory = currentHistory.dropLast(1)
+                copy(
+                    scoreboard = updatedHistory.last(),
+                    scoreboardHistory = updatedHistory,
+                )
+            }
 
-        val newScoreboardHistory = scoreboardHistory.dropLast(1)
-
-        setState {
-            copy(
-                scoreboard = newScoreboardHistory.last(),
-                scoreboardHistory = newScoreboardHistory,
-            )
+            else -> this
         }
     }
 
     companion object {
         private const val TAG = "MainViewModel"
         const val MOCK_ARG = "mock_arg"
+        const val SCOREBOARD_HISTORY_MOCK = "scoreboard_history_mock"
     }
 }

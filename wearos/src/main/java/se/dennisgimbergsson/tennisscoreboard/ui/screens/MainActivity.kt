@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             viewModel.incrementAway()
                             viewModel.updateScoreboard()
                         },
-                        revertLastScore = viewModel::popScoreboardHistory,
+                        revertLastScore = viewModel::revertLastScore,
                         clearAll = viewModel::clearScoreboard,
                         decrementHome = viewModel::decrementHome,
                         decrementAway = viewModel::decrementAway,
