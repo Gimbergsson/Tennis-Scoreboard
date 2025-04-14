@@ -26,12 +26,12 @@ val gitBranchName = providers.exec {
 
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "se.dennisgimbergsson.tennisscoreboard"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "${buildVersionName()} ($versionCode)"
         vectorDrawables.useSupportLibrary = true
