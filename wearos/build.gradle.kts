@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId = "se.dennisgimbergsson.tennisscoreboard"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "${buildVersionName()} ($versionCode)"
         vectorDrawables.useSupportLibrary = true
