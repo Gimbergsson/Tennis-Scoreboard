@@ -64,6 +64,8 @@ android {
 
     packaging {
         resources {
+            excludes.add("META-INF/LICENSE.md")
+            excludes.add("META-INF/LICENSE-notice.md")
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
@@ -125,8 +127,11 @@ dependencies {
 
     implementation(libs.gson)
 
+    /**
+     * Unit test dependencies
+     */
     testImplementation(libs.androidx.arch.core)
-    testImplementation(libs.kotlinx.corutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Junit4
     testImplementation(libs.junit)
@@ -145,10 +150,16 @@ dependencies {
     // Mockk
     testImplementation(libs.mockk)
 
+    /**
+     * UI test dependencies
+     */
     androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.rules)
+
+    // Mockk
+    androidTestImplementation(libs.mockk)
 
     // Espresso
     androidTestImplementation(libs.androidx.espresso.core)

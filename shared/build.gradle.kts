@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    jacoco
 }
 
 android {
@@ -16,6 +17,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverage {
+                enableUnitTestCoverage = true
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -32,6 +38,11 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    testOptions {
+        animationsDisabled = true
+        unitTests.isReturnDefaultValues = true
     }
 }
 
@@ -61,8 +72,14 @@ dependencies {
 
     implementation(libs.gson)
 
+    /**
+     * Unit test dependencies
+     */
+    // Mockk
+    testImplementation(libs.mockk)
+
     testImplementation(libs.androidx.arch.core)
-    testImplementation(libs.kotlinx.corutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Junit4
     testImplementation(libs.junit)
@@ -81,10 +98,61 @@ dependencies {
     // Mockk
     testImplementation(libs.mockk)
 
+    /**
+     * UI Test dependencies
+     */
+    // Mockk
+    androidTestImplementation(libs.mockk)
+
     // AndroidX Test
     androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.rules)
+}
+
+// Filter out unnecessary files from code coverage
+val fileFilter = setOf(
+    "**/R.class",
+    "**/R$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*Test*.*",
+    "android/**/*.*",
+
+    // Hilt
+    "**/databinding/*",
+    "**/Dagger*",
+    "**/Hilt*",
+    "**/DataBinding*",
+    "**/DataBinder*",
+    "**/*_*",
+    "**/*Module.kt",
+    "**/*AppModule.java",
+    "**/_se_dennisgimbergsson_shared_di_AppModule.java",
+    "**/di/**",
+    "dagger.hilt.internal/*",
+    "/transformDebugClassesWithAsm/dirs/hilt_aggregated_deps/*",
+)
+
+tasks.register("jacocoTestReport", JacocoReport::class) {
+    dependsOn("testDebugUnitTest", "createDebugUnitTestCoverageReport")
+
+    val debugTree = fileTree("${layout.buildDirectory}/intermediates/classes/debug")
+        .apply { exclude(fileFilter) }
+
+    println(debugTree.files.toString())
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(fileTree("${layout.buildDirectory}").apply {
+        include(
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec",
+            "**Module*.*"
+        )
+    })
 }
