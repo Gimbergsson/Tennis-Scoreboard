@@ -14,9 +14,7 @@ buildscript {
         classpath(libs.android.gradle.plugin)
         classpath(libs.kotlin.gradle.plugin)
         classpath(libs.hilt.gradle.plugin)
-
-        classpath(libs.androidx.compose.compiler)
-        classpath(libs.androidx.compose.runtime)
+        classpath(libs.navigation.safeargs.gradle.plugin)
 
         classpath("de.mannodermaus.gradle.plugins:android-junit5:1.11.2.0")
 
@@ -30,10 +28,9 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.compiler) apply false
-    alias(libs.plugins.jetbrainsCompose) apply false
-    alias(libs.plugins.kotlinMultiplatform) apply false
-    id("org.jetbrains.kotlin.jvm") version "2.1.10"
-    id("com.google.devtools.ksp") version "2.1.10-1.0.30"
+    alias(libs.plugins.jetbrains.compose) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.hilt) apply false
 }
 
 allprojects {

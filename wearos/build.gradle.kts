@@ -2,12 +2,11 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
-
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -18,7 +17,6 @@ val apikeyPropertiesFile = rootProject.file("apikey.properties")
 val apikeyProperties = Properties()
 apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
-@Suppress("UnstableApiUsage")
 val gitBranchName = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
@@ -91,19 +89,15 @@ android {
 dependencies {
     implementation(project(":shared"))
 
+    // Dependency injection with Hilt.
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.compiler)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-
-    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.splashscreen)
@@ -124,11 +118,10 @@ dependencies {
     implementation(libs.play.services.wearable)
     implementation(libs.play.services.tasks)
 
-    implementation(libs.kotlinx.corutines.core)
-    implementation(libs.kotlinx.corutines.play.services)
-
-    implementation(libs.jetbrain.corutines.android)
-    implementation(libs.jetbrain.corutines.guava)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.guava)
 
     implementation(libs.gson)
 
@@ -162,8 +155,6 @@ dependencies {
 
     // Test rules and transitive dependencies:
     androidTestImplementation(libs.androidx.compose.ui.unit)
-    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
 
 tasks.withType<Test> {

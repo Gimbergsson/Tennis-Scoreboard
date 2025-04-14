@@ -5,8 +5,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+
+    kotlin("plugin.serialization") version "2.0.21"
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -17,7 +20,6 @@ val apikeyPropertiesFile = rootProject.file("apikey.properties")
 val apikeyProperties = Properties()
 apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
-@Suppress("UnstableApiUsage")
 val gitBranchName = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
@@ -37,6 +39,10 @@ android {
 
         buildConfigField("String", "APPWRITE_PROJECT_ID", apikeyProperties.getProperty("APPWRITE_PROJECT_ID"))
         buildConfigField("String", "APPWRITE_API_KEY", apikeyProperties.getProperty("APPWRITE_API_KEY"))
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     signingConfigs {
@@ -87,11 +93,22 @@ android {
 dependencies {
     implementation(project(":shared"))
 
-    implementation(libs.hilt.android)
+    // Dependency injection with Hilt.
     ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.android)
 
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.compiler)
+    // Local SQLite database with Room.
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.animation)
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.splashscreen)
