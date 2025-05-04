@@ -8,8 +8,6 @@ kotlin-gradle-plugin = "2.0.20"
 hilt-gradle-plugin = "2.51.1"
 compose-plugin = "1.7.0"
 navigation-safeargs-plugin = "2.8.9"
-jacoco-plugin = "0.8.13"
-junit5-plugin = "1.11.2.0"
 
 hilt = "2.54"
 room = "2.7.0"
