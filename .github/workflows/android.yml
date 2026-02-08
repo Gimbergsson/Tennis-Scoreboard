@@ -19,11 +19,11 @@ jobs:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-
 
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
+    - name: set up JDK 21
+      uses: actions/setup-java@v5
       with:
-        java-version: '17'
-        distribution: 'temurin'
+        java-version: '21'
+        distribution: 'jetbrains'
         cache: gradle
 
     - uses: ruby/setup-ruby@v1
@@ -64,7 +64,10 @@ jobs:
       run: echo "${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > service-account-fehu-351916-1b4950fa3fb0.json
 
     - name: Run WearOS Unit tests
-      run: ./gradlew wearos:testReleaseUnitTest
+      run: ./gradlew wearos:testDebugUnitTest
+
+    - name: Run tennis-score-manager Unit tests
+      run: ./gradlew tennis-score-manager:testDebugUnitTest
 
     - name: Create version codes from runner number
       run: |
