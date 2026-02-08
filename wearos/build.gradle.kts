@@ -1,9 +1,10 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
@@ -17,22 +18,28 @@ val apikeyPropertiesFile = rootProject.file("apikey.properties")
 val apikeyProperties = Properties()
 apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
-val gitBranchName = providers.exec {
+val gitBranchName: String = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
 
+kotlin {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+    }
+}
+
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "se.dennisgimbergsson.tennisscoreboard"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "${buildVersionName()} ($versionCode)"
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "se.dennisgimbergsson.tennisscoreboard.CustomTestRunner"
     }
 
     signingConfigs {
@@ -69,16 +76,9 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        languageVersion = "2.0"
-        jvmTarget = "17"
-    }
-
-    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests {
             isReturnDefaultValues = true
@@ -87,7 +87,10 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.android.desugar)
+
     implementation(project(":shared"))
+    implementation(project(":tennis-score-manager"))
 
     // Dependency injection with Hilt.
     ksp(libs.hilt.android.compiler)
@@ -125,8 +128,21 @@ dependencies {
 
     implementation(libs.gson)
 
+    /**
+     * Unit test dependencies
+     */
+    testImplementation(testFixtures(project(":shared")))
+
     testImplementation(libs.androidx.arch.core)
-    testImplementation(libs.kotlinx.corutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.androidx.core.ktx)
+    testImplementation(libs.androidx.runner)
+    testImplementation(libs.androidx.junit.ktx)
+    testImplementation(libs.androidx.rules)
+
+    // Hilt
+    testImplementation(libs.hilt.android.testing)
 
     // Junit4
     testImplementation(libs.junit)
@@ -138,17 +154,22 @@ dependencies {
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.vintage.engine)
 
-    // Mockito
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-
     // Mockk
     testImplementation(libs.mockk)
 
+    /**
+     * UI test dependencies
+     */
     androidTestImplementation(libs.androidx.core.ktx)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.rules)
+
+    // Hilt
+    androidTestImplementation(libs.hilt.android.testing)
+
+    // Mockk
+    androidTestImplementation(libs.mockk)
 
     // Espresso
     androidTestImplementation(libs.androidx.espresso.core)
@@ -161,7 +182,7 @@ tasks.withType<Test> {
     testLogging {
         events("passed", "skipped", "failed", "standardOut", "standardError")
         showExceptions = true
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
         showStackTraces = true
         showStandardStreams = true

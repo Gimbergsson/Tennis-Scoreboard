@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -15,8 +12,7 @@ buildscript {
         classpath(libs.kotlin.gradle.plugin)
         classpath(libs.hilt.gradle.plugin)
         classpath(libs.navigation.safeargs.gradle.plugin)
-
-        classpath("de.mannodermaus.gradle.plugins:android-junit5:1.11.2.0")
+        classpath(libs.junit5.gradle.plugin)
 
         // NOTE: Do not place your application dependencies here;
         // they belong in the individual module build.gradle files
@@ -24,21 +20,10 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
-}
-
-allprojects {
-    tasks {
-        withType<KotlinCompile> {
-            compilerOptions {
-                jvmTarget = JvmTarget.JVM_17
-            }
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package se.dennisgimbergsson.tennisscoreboard.testutils
+package se.dennisgimbergsson.shared
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

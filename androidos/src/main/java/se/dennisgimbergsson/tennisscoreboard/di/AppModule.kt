@@ -10,8 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.appwrite.Client
 import se.dennisgimbergsson.shared.utils.Constants
-import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
-import se.dennisgimbergsson.shared.utils.DispatcherProvider
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -25,9 +23,6 @@ object AppModule {
 
     @Provides
     fun appwriteClient(): Client = Client()
-
-    @Provides
-    fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 
     @Singleton
     @Provides

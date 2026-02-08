@@ -13,6 +13,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import se.dennisgimbergsson.shared.GameScoresDeserializer
 import se.dennisgimbergsson.shared.enums.GameScores
+import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
+import se.dennisgimbergsson.shared.utils.DispatcherProvider
 import javax.inject.Singleton
 
 @Module
@@ -23,14 +25,22 @@ object AppModule {
     fun gson(): Gson = GsonBuilder()
         .registerTypeAdapter(GameScores::class.java, GameScoresDeserializer())
         .create()
+    @Provides
+    fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 
     @Singleton
     @Provides
-    fun workManager(@ApplicationContext context: Context): WorkManager =
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager =
         WorkManager.getInstance(context)
 
     @Singleton
     @Provides
-    fun wearableDataClient(@ApplicationContext context: Context): DataClient =
+    fun provideWearableDataClient(@ApplicationContext context: Context): DataClient =
         Wearable.getDataClient(context)
+
+    @Singleton
+    @Provides
+    fun provideCoroutineScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    }
 }

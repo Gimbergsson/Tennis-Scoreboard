@@ -1,14 +1,22 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    jacoco
+}
+
+kotlin {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+    }
 }
 
 android {
     namespace = "se.dennisgimbergsson.shared"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 28
@@ -16,6 +24,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverage {
+                enableUnitTestCoverage = true
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -25,13 +38,14 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+    @Suppress("UnstableApiUsage")
+    testFixtures {
+        enable = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    testOptions {
+        animationsDisabled = true
+        unitTests.isReturnDefaultValues = true
     }
 }
 
@@ -61,8 +75,14 @@ dependencies {
 
     implementation(libs.gson)
 
+    /**
+     * Unit test dependencies
+     */
+    // Mockk
+    testImplementation(libs.mockk)
+
     testImplementation(libs.androidx.arch.core)
-    testImplementation(libs.kotlinx.corutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Junit4
     testImplementation(libs.junit)
@@ -74,12 +94,23 @@ dependencies {
     testImplementation(libs.junit.jupiter.params)
     testRuntimeOnly(libs.junit.vintage.engine)
 
-    // Mockito
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-
     // Mockk
     testImplementation(libs.mockk)
+
+    /**
+     * Test fixtures dependencies
+     */
+    testFixturesImplementation(libs.kotlin.stdlib)
+    testFixturesImplementation(libs.androidx.arch.core)
+    testFixturesImplementation(libs.androidx.compose.runtime)
+    testFixturesImplementation(libs.kotlinx.coroutines.test)
+    testFixturesImplementation(libs.junit)
+
+    /**
+     * UI Test dependencies
+     */
+    // Mockk
+    androidTestImplementation(libs.mockk)
 
     // AndroidX Test
     androidTestImplementation(libs.androidx.core.ktx)

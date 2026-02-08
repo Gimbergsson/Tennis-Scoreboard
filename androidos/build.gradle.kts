@@ -1,9 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
@@ -23,6 +23,12 @@ apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 val gitBranchName = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
+
+kotlin {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+    }
+}
 
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
@@ -80,18 +86,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        languageVersion = "2.0"
-        jvmTarget = "17"
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.android.desugar)
+
     implementation(project(":shared"))
+    implementation(project(":tennis-score-manager"))
 
     // Dependency injection with Hilt.
     ksp(libs.hilt.android.compiler)
@@ -162,8 +165,8 @@ private fun buildVersionName(): String {
         } else {
             branchIdentifierName
         }
-    } catch (ignored: Exception) {
-        println("Failed to get git branch")
+    } catch (exception: Exception) {
+        println("Failed to get git branch: $exception")
     }
     return versionName
 }

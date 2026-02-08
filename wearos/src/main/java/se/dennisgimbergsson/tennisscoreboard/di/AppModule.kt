@@ -9,8 +9,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import se.dennisgimbergsson.shared.utils.Constants
-import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
-import se.dennisgimbergsson.shared.utils.DispatcherProvider
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -21,9 +19,6 @@ annotation class DeveloperPreferences
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 
     @Singleton
     @Provides
