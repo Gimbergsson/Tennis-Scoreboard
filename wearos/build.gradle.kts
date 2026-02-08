@@ -1,5 +1,4 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -21,12 +20,6 @@ apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 val gitBranchName: String = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
-
-kotlin {
-    compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
-    }
-}
 
 android {
     namespace = "se.dennisgimbergsson.tennisscoreboard"
@@ -217,8 +210,8 @@ private fun buildVersionName(): String {
         } else {
             branchIdentifierName
         }
-    } catch (ignored: Exception) {
-        println("Failed to get git branch")
+    } catch (e: Exception) {
+        println("Failed to get git branch: ${e.message}")
     }
     return versionName
 }

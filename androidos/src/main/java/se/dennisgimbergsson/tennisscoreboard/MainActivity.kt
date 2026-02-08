@@ -16,8 +16,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import se.dennisgimbergsson.shared.extensions.logAndroidMessage
-import se.dennisgimbergsson.tennisscoreboard.databinding.ActivityMainBinding
 import se.dennisgimbergsson.tennisscoreboard.data.workers.ScoreboardWorker
+import se.dennisgimbergsson.tennisscoreboard.databinding.ActivityMainBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint

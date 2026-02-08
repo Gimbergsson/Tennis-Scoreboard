@@ -148,7 +148,6 @@ class MainViewModelTest {
         }
     }
 
-
     @Test
     fun `check that state is not reverted if there is no history`() = runTest {
         createViewModel(

@@ -1,16 +1,10 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     jacoco
-}
-
-kotlin {
-    compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
-    }
 }
 
 android {
@@ -38,10 +32,6 @@ android {
             )
         }
     }
-
-    /*sourceSets.named("androidTest") {
-        java.setSrcDirs(emptyList<String>())
-    }*/
 
     testOptions {
         animationsDisabled = true
@@ -85,4 +75,12 @@ dependencies {
 
     // Mockk
     testImplementation(libs.mockk)
+}
+
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "skipped", "failed",)
+        exceptionFormat = TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
 }

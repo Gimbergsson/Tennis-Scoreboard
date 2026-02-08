@@ -1,17 +1,9 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     jacoco
-}
-
-kotlin {
-    compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
-    }
 }
 
 android {

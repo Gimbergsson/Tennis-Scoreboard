@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -24,10 +23,8 @@ val gitBranchName = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
 
-kotlin {
-    compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_0
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
@@ -45,10 +42,6 @@ android {
 
         buildConfigField("String", "APPWRITE_PROJECT_ID", apikeyProperties.getProperty("APPWRITE_PROJECT_ID"))
         buildConfigField("String", "APPWRITE_API_KEY", apikeyProperties.getProperty("APPWRITE_API_KEY"))
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
 
     signingConfigs {
