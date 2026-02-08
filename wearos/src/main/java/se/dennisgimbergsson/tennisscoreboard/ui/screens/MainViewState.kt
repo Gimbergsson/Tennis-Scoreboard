@@ -1,10 +1,10 @@
 package se.dennisgimbergsson.tennisscoreboard.ui.screens
 
 import androidx.compose.runtime.Immutable
-import se.dennisgimbergsson.shared.data.models.Scoreboard
+import se.dennisgimbergsson.tennisscoring.data.models.Scoreboard
 
 @Immutable
 data class MainViewState(
-    val scoreboard: Scoreboard = Scoreboard(),
     val scoreboardHistory: List<Scoreboard> = listOf(Scoreboard()),
+    val savedScoreboards: List<Scoreboard> = listOf(Scoreboard()),
 )

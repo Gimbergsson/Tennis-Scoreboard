@@ -3,23 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_matches">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="se.dennisgimbergsson.tennisscoreboard.screens.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_matches"
+        android:name="se.dennisgimbergsson.tennisscoreboard.ui.screens.matches.MatchesFragment"
+        android:label="@string/title_matches" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_match"
+            app:destination="@id/navigation_match"
+
+            app:launchSingleTop="true"
+            app:restoreState="true"
+
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="se.dennisgimbergsson.tennisscoreboard.screens.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_match"
+        android:name="se.dennisgimbergsson.tennisscoreboard.ui.screens.match.MatchFragment"
+        android:label="@string/title_match">
+        <argument
+            android:name="arg_match_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_navigation_match_to_navigation_matches"
+            app:destination="@id/navigation_matches"
+            app:popUpTo="@id/navigation_match"
+            app:popUpToSaveState="true"
+            app:restoreState="true"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_scoreboard"
+        android:name="se.dennisgimbergsson.tennisscoreboard.ui.screens.scoreboard.ScoreboardFragment"
+        android:label="@string/title_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="se.dennisgimbergsson.tennisscoreboard.screens.notifications.NotificationsFragment"
+        android:name="se.dennisgimbergsson.tennisscoreboard.ui.screens.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

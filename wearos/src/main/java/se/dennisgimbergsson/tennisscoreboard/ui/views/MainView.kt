@@ -34,23 +34,24 @@ import androidx.wear.tooling.preview.devices.WearDevices.RECT
 import androidx.wear.tooling.preview.devices.WearDevices.SMALL_ROUND
 import androidx.wear.tooling.preview.devices.WearDevices.SQUARE
 import kotlinx.coroutines.launch
-import se.dennisgimbergsson.shared.data.models.Score
-import se.dennisgimbergsson.shared.data.models.Scoreboard
-import se.dennisgimbergsson.shared.enums.GameScores
 import se.dennisgimbergsson.tennisscoreboard.R
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.IncrementAway
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.IncrementHome
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainUiEvent
 import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewState
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.ResetScoreboard
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.RevertCurrentScore
+import se.dennisgimbergsson.tennisscoreboard.ui.screens.SaveAndSyncScoreboards
 import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
+import se.dennisgimbergsson.tennisscoring.data.Points
+import se.dennisgimbergsson.tennisscoring.data.models.Score
+import se.dennisgimbergsson.tennisscoring.data.models.Scoreboard
 
 @Composable
 fun MainView(
     modifier: Modifier = Modifier,
     state: MainViewState,
-    incrementHomeScore: () -> Unit = {},
-    incrementAwayScore: () -> Unit = {},
-    revertLastScore: () -> Unit = {},
-    clearAll: () -> Unit = {},
-    decrementHome: () -> Unit = {},
-    decrementAway: () -> Unit = {},
+    onEvent: (MainUiEvent) -> Unit = {},
 ) {
 
     val focusRequester = remember { FocusRequester() }
@@ -84,22 +85,41 @@ fun MainView(
             scalingParams = ScalingLazyColumnDefaults.scalingParams(),
         ) {
             item {
-                ScoreboardView(
+                NewScoreboardView(
                     state = state,
-                    incrementHomeScore = incrementHomeScore,
-                    incrementAwayScore = incrementAwayScore,
+                    incrementHomeScore = { onEvent(IncrementHome) },
+                    incrementAwayScore = { onEvent(IncrementAway) },
                 )
             }
+            /*item {
+                ScoreboardView(
+                    state = state,
+                    incrementHomeScore = { onEvent(IncrementHome) },
+                    incrementAwayScore = { onEvent(IncrementAway) },
+                )
+            }
+            if (state.scoreboard.isTieBreak) {
+                item {
+                    TiebreakView(
+                        state = state,
+                        incrementHomeScore = { onEvent(IncrementHome) },
+                        incrementAwayScore = { onEvent(IncrementAway) },
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }*/
             item {
                 Button(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(5.dp),
                     contentPadding = PaddingValues(0.dp),
-                    onClick = { revertLastScore() }
+                    onClick = { onEvent(RevertCurrentScore) }
                 ) {
                     Text(
                         modifier = Modifier.padding(0.dp),
-                        text = stringResource(id = R.string.revert_last_score),
+                        text = stringResource(id = R.string.revert_current_score),
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -109,11 +129,10 @@ fun MainView(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(5.dp),
                     contentPadding = PaddingValues(0.dp),
-                    onClick = { decrementHome() }
+                    onClick = { onEvent(ResetScoreboard) }
                 ) {
                     Text(
-                        modifier = Modifier.padding(0.dp),
-                        text = stringResource(id = R.string.decrement_home_score),
+                        text = stringResource(id = R.string.reset_scoreboard),
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -123,23 +142,10 @@ fun MainView(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(5.dp),
                     contentPadding = PaddingValues(0.dp),
-                    onClick = { decrementAway() }
+                    onClick = { onEvent(SaveAndSyncScoreboards) }
                 ) {
                     Text(
-                        text = stringResource(id = R.string.decrement_away_score),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-            item {
-                Button(
-                    modifier = Modifier.fillMaxSize(),
-                    shape = RoundedCornerShape(5.dp),
-                    contentPadding = PaddingValues(0.dp),
-                    onClick = { clearAll() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.clear_all_score),
+                        text = "save and sync",
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -187,18 +193,44 @@ fun MainView(
 )
 @Composable
 private fun ScoreboardViewPreview() = TennisScoreboardTheme {
-    ScoreboardView(
+    NewScoreboardView(
         state = MainViewState(
-            scoreboard = Scoreboard(
+            /*scoreboard = Scoreboard(
                 homeScore = Score(
-                    gameScore = GameScores.FIFTEEN,
+                    points = Points.FIFTEEN,
                     wonGames = 1,
                     wonSets = 1,
                 ),
                 awayScore = Score(
-                    gameScore = GameScores.FORTY,
+                    points = Points.FORTY,
                     wonGames = 1,
                     wonSets = 1,
+                )
+            ),*/
+            scoreboardHistory = listOf(
+                Scoreboard(
+                    homeScore = Score(
+                        points = Points.FIFTEEN,
+                        wonGames = 1,
+                        wonSets = 1,
+                    ),
+                    awayScore = Score(
+                        points = Points.ZERO,
+                        wonGames = 1,
+                        wonSets = 0,
+                    )
+                ),
+                Scoreboard(
+                    homeScore = Score(
+                        points = Points.FIFTEEN,
+                        wonGames = 1,
+                        wonSets = 1,
+                    ),
+                    awayScore = Score(
+                        points = Points.FIFTEEN,
+                        wonGames = 1,
+                        wonSets = 1,
+                    )
                 )
             )
         )

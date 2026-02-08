@@ -1,8 +1,5 @@
 package se.dennisgimbergsson.tennisscoreboard.ui.views
 
-import android.view.KeyEvent.KEYCODE_STEM_1
-import android.view.KeyEvent.KEYCODE_STEM_2
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,24 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.wear.input.WearableButtons
-import se.dennisgimbergsson.shared.utils.WearPreview
+import se.dennisgimbergsson.shared.utils.ThemedPreview
 import se.dennisgimbergsson.tennisscoreboard.R
 import se.dennisgimbergsson.tennisscoreboard.ui.screens.MainViewState
+import se.dennisgimbergsson.tennisscoreboard.ui.theme.TennisScoreboardTheme
 
 @Composable
 fun ScoreboardView(
@@ -41,11 +34,11 @@ fun ScoreboardView(
     modifier = Modifier
         .fillMaxWidth(),
 ) {
-    val context = LocalContext.current
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.Center,
     ) {
+        val scoreboard = state.scoreboardHistory.last()
         Column(
             modifier = Modifier
                 .clickable { incrementHomeScore() }
@@ -57,7 +50,7 @@ fun ScoreboardView(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                val homeButton =
+                /*val homeButton =
                     WearableButtons.getButtonInfo(context, KEYCODE_STEM_1)
                 val homeIcon =
                     WearableButtons.getButtonIcon(
@@ -71,7 +64,7 @@ fun ScoreboardView(
                         contentDescription = stringResource(id = R.string.icon_increment_home_score),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                }
+                }*/
                 Text(
                     modifier = Modifier,
                     text = stringResource(id = R.string.home_score_label),
@@ -84,7 +77,8 @@ fun ScoreboardView(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = state.scoreboard.homeScore.wonSets.toString(),
+                    //text = state.scoreboard.homeScore.wonSets.toString(),
+                    text = scoreboard.homeScore.wonSets.toString(),
                     color = Color.White,
                     textAlign = TextAlign.End,
                     fontSize = 14.sp,
@@ -92,7 +86,8 @@ fun ScoreboardView(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = state.scoreboard.homeScore.wonGames.toString(),
+                    //text = state.scoreboard.homeScore.wonGames.toString(),
+                    text = scoreboard.homeScore.wonGames.toString(),
                     color = Color.White,
                     textAlign = TextAlign.End,
                     fontSize = 20.sp,
@@ -102,7 +97,8 @@ fun ScoreboardView(
             Text(
                 modifier = Modifier
                     .padding(end = 8.dp),
-                text = stringResource(id = state.scoreboard.homeScore.gameScore.stringResource),
+                //text = stringResource(id = state.scoreboard.homeScore.points.stringResource),
+                text = stringResource(id = scoreboard.homeScore.points.stringResource),
                 color = Color.White,
                 textAlign = TextAlign.End,
                 fontSize = 32.sp,
@@ -152,7 +148,7 @@ fun ScoreboardView(
                     textAlign = TextAlign.Start,
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                val awayButton =
+                /*val awayButton =
                     WearableButtons.getButtonInfo(context, KEYCODE_STEM_2)
                 val awayIcon =
                     WearableButtons.getButtonIcon(
@@ -165,14 +161,15 @@ fun ScoreboardView(
                         bitmap = it.toBitmap().asImageBitmap(),
                         contentDescription = stringResource(id = R.string.icon_increment_away_score),
                     )
-                }
+                }*/
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row {
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = state.scoreboard.awayScore.wonGames.toString(),
+                    //text = state.scoreboard.awayScore.wonGames.toString(),
+                    text = scoreboard.awayScore.wonGames.toString(),
                     color = Color.White,
                     textAlign = TextAlign.Start,
                     fontSize = 20.sp,
@@ -180,7 +177,8 @@ fun ScoreboardView(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = state.scoreboard.awayScore.wonSets.toString(),
+                    //text = state.scoreboard.awayScore.wonSets.toString(),
+                    text = scoreboard.awayScore.wonSets.toString(),
                     color = Color.White,
                     textAlign = TextAlign.Start,
                     fontSize = 14.sp,
@@ -190,7 +188,8 @@ fun ScoreboardView(
             Text(
                 modifier = Modifier
                     .padding(start = 8.dp),
-                text = stringResource(id = state.scoreboard.awayScore.gameScore.stringResource),
+                //text = stringResource(id = state.scoreboard.awayScore.points.stringResource),
+                text = stringResource(id = scoreboard.awayScore.points.stringResource),
                 color = Color.White,
                 textAlign = TextAlign.Start,
                 fontSize = 32.sp,
@@ -199,10 +198,13 @@ fun ScoreboardView(
     }
 }
 
-@WearPreview
+//@WearPreview
+@ThemedPreview
 @Composable
-private fun ScoreboardViewPreview() = ScoreboardView(
-    state = MainViewState(),
-    incrementHomeScore = {},
-    incrementAwayScore = {},
-)
+private fun ScoreboardViewPreview() = TennisScoreboardTheme {
+    ScoreboardView(
+        state = MainViewState(),
+        incrementHomeScore = {},
+        incrementAwayScore = {},
+    )
+}

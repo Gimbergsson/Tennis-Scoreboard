@@ -7,8 +7,10 @@
     <string name="score_30">30</string>
     <string name="score_15">15</string>
     <string name="score_advantage">Adv.</string>
-    <string name="revert_last_score">Revert last score</string>
+    <string name="revert_current_score">Revert current score</string>
     <string name="decrement_home_score">Decrement home</string>
     <string name="decrement_away_score">Decrement away</string>
-    <string name="clear_all_score">Clear all</string>
+    <string name="reset_scoreboard">Reset scoreboard</string>
+    <string name="save_match">Save match</string>
+    <string name="sync_saved_matches">Sync saved matches</string>
 </resources>

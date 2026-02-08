@@ -36,12 +36,14 @@ private val LightColorPalette = lightColorScheme(
 fun TennisScoreboardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
-) = MaterialTheme(
-    colorScheme = when {
-        darkTheme -> DarkColorPalette
-        else -> LightColorPalette
-    },
-    typography = Typography,
-    shapes = Shapes,
-    content = content
-)
+) {
+    MaterialTheme(
+        colorScheme = when {
+            darkTheme -> DarkColorPalette
+            else -> LightColorPalette
+        },
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
+}

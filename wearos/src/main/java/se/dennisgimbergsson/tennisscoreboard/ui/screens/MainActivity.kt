@@ -40,18 +40,7 @@ class MainActivity : ComponentActivity() {
                         state = viewModel.stateFlow.collectAsStateWithLifecycle(
                             initialValue = MainViewState()
                         ).value,
-                        incrementHomeScore = {
-                            viewModel.incrementHome()
-                            viewModel.updateScoreboard()
-                        },
-                        incrementAwayScore = {
-                            viewModel.incrementAway()
-                            viewModel.updateScoreboard()
-                        },
-                        revertLastScore = viewModel::revertLastScore,
-                        clearAll = viewModel::clearScoreboard,
-                        decrementHome = viewModel::decrementHome,
-                        decrementAway = viewModel::decrementAway,
+                        onEvent = viewModel::onEvent
                     )
                 }
             }
@@ -62,15 +51,8 @@ class MainActivity : ComponentActivity() {
         return when (event.repeatCount) {
             0 -> {
                 when (keyCode) {
-                    KEYCODE_STEM_1 -> {
-                        viewModel.incrementHome()
-                        viewModel.updateScoreboard()
-                    }
-
-                    KEYCODE_STEM_2 -> {
-                        viewModel.incrementAway()
-                        viewModel.updateScoreboard()
-                    }
+                    KEYCODE_STEM_1 -> viewModel.onEvent(IncrementHome)
+                    KEYCODE_STEM_2 -> viewModel.onEvent(IncrementAway)
                 }
                 true
             }

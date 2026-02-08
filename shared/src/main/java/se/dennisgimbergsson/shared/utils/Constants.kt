@@ -1,5 +1,7 @@
 package se.dennisgimbergsson.shared.utils
 
+import java.util.Locale
+
 object Constants {
 
     object Debug {
@@ -10,6 +12,7 @@ object Constants {
     object Keys{
         const val SCOREBOARD = "scoreboard"
         const val SCOREBOARD_HISTORY = "scoreboard_history"
+        const val SAVED_SCOREBOARDS = "saved_scoreboards"
         const val SCOREBOARD_UPDATE = "scoreboard_update"
     }
 
@@ -19,6 +22,14 @@ object Constants {
 
     object Paths {
         const val SCOREBOARD_UPDATE = "/scoreboard_update"
+        const val SAVED_SCOREBOARDS_UPDATE = "/saved_scoreboards_update"
+    }
+
+    object Locales {
+        val DefaultAppLocale: Locale = Locale.Builder()
+            .setLanguage("sv")
+            .setRegion("SE")
+            .build()
     }
 
 }

@@ -11,13 +11,15 @@ import androidx.wear.tooling.preview.devices.WearDevices.SQUARE
     name = "Light theme",
     group = "theme",
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    device = "id:pixel_9_pro_xl"
 )
 @Preview(
     name = "Dark theme",
     group = "theme",
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = "id:pixel_9_pro_xl",
 )
 annotation class ThemedPreview
 

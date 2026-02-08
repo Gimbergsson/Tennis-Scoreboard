@@ -11,8 +11,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import se.dennisgimbergsson.shared.GameScoresDeserializer
-import se.dennisgimbergsson.shared.enums.GameScores
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import se.dennisgimbergsson.shared.utils.DefaultDispatcherProvider
 import se.dennisgimbergsson.shared.utils.DispatcherProvider
 import javax.inject.Singleton
@@ -22,9 +23,8 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun gson(): Gson = GsonBuilder()
-        .registerTypeAdapter(GameScores::class.java, GameScoresDeserializer())
-        .create()
+    fun provideGson(): Gson = GsonBuilder().create()
+
     @Provides
     fun providesDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 
