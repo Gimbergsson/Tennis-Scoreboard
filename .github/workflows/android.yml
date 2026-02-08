@@ -35,6 +35,7 @@ jobs:
       run: |
         gem install bundler
         bundle install
+        bundle update
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -64,10 +65,10 @@ jobs:
       run: echo "${{ secrets.SERVICE_ACCOUNT_JSON_BASE64 }}" | base64 --decode > service-account-fehu-351916-1b4950fa3fb0.json
 
     - name: Run WearOS Unit tests
-      run: ./gradlew wearos:testDebugUnitTest
+      run: ./gradlew :wearos:testDebugUnitTest
 
     - name: Run tennis-score-manager Unit tests
-      run: ./gradlew tennis-score-manager:testDebugUnitTest
+      run: ./gradlew :tennis-score-manager:testDebugUnitTest
 
     - name: Create version codes from runner number
       run: |
