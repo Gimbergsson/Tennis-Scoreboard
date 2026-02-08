@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="score_0">0</string>
+    <string name="score_40">40</string>
+    <string name="score_30">30</string>
+    <string name="score_15">15</string>
+    <string name="score_advantage">Adv.</string>
+</resources>

@@ -48,3 +48,4 @@ rootProject.name = "Tennis Scoreboard"
 include(":wearos")
 include(":androidos")
 include(":shared")
+include(":tennis-score-manager")
