@@ -24,7 +24,10 @@
 -keep class se.dennisgimbergsson.tennisscoreboard.ui.screens.MainActivity { *; }
 
 # Classes from :shared module
--keep class se.dennisgimbergsson.shared.data.models.** { *; }
 -keep @se.dennisgimbergsson.shared.utils.ThemedPreview class *
 -keep @se.dennisgimbergsson.shared.utils.LocalePreview class *
 -keep @se.dennisgimbergsson.shared.utils.WearPreview class *
+
+# Classes from :tennis-score-manager module
+-keep class se.dennisgimbergsson.tennisscoring.data.models.** { *; }
+-keep class se.dennisgimbergsson.tennisscoring.data.Points { *; }
