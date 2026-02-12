@@ -11,15 +11,15 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
 }
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File? = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
-val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyPropertiesFile: File? = rootProject.file("apikey.properties")
 val apikeyProperties = Properties()
 apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
 
-val gitBranchName = providers.exec {
+val gitBranchName: String? = providers.exec {
     commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
 }.standardOutput.asText.get()
 
@@ -40,8 +40,16 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "APPWRITE_PROJECT_ID", apikeyProperties.getProperty("APPWRITE_PROJECT_ID"))
-        buildConfigField("String", "APPWRITE_API_KEY", apikeyProperties.getProperty("APPWRITE_API_KEY"))
+        buildConfigField(
+            "String",
+            "APPWRITE_PROJECT_ID",
+            apikeyProperties.getProperty("APPWRITE_PROJECT_ID")
+        )
+        buildConfigField(
+            "String",
+            "APPWRITE_API_KEY",
+            apikeyProperties.getProperty("APPWRITE_API_KEY")
+        )
     }
 
     signingConfigs {
@@ -144,19 +152,18 @@ private fun buildVersionName(): String {
     var versionName = "undefined-version-name"
     try {
         // Gets the full branch name from Git.
-        val branchName = gitBranchName.trim()
+        val branchName = gitBranchName?.trim()
 
         // Only take the identifier part from the full branch name
         // example from "release/1-0-0" to "1-0-0".
-        val branchIdentifierName = gitBranchName.trim()
-            .split("/")
-            .last()
+        val branchIdentifierName = branchName?.split("/")
+            ?.last() ?: versionName
 
         // If it's a release build then replace the strokes with dots.
-        versionName = if (branchName.startsWith("release")) {
-            branchIdentifierName.replace("-", ".")
-        } else {
-            branchIdentifierName
+        val startsWithRelease = branchName?.startsWith("release") == true
+        versionName = when {
+            startsWithRelease -> branchIdentifierName.replace("-", ".")
+            else -> branchIdentifierName
         }
     } catch (exception: Exception) {
         println("Failed to get git branch: $exception")
